@@ -1,5 +1,5 @@
 Backend/.idea/
-Backend/db.sqlite3/
+Backend/db.sqlite3
 
 # Created by https://www.toptal.com/developers/gitignore/api/vs,vscode,dotnetcore,venv
 # Edit at https://www.toptal.com/developers/gitignore?templates=vs,vscode,dotnetcore,venv
