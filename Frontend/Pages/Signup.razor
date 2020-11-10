@@ -1,0 +1,88 @@
+Aida, [Nov 10, 2020 at 2:38:18 PM]:
+@page "/signup"
+
+<div class="d-flex justify-content-center w-100" style="padding-top: 100px">
+    <div class="rounded bg-white py-4 px-4" style="width: 400px;">
+        <h4 class="text-center font-weight-bold mb-4">Sign up</h4>
+        <ul class="nav nav-tabs nav-fill mb-3" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class=@CafeTabClass @onclick="OnCafeTabClickMethod">Cafe</a>
+            </li>
+            <li class="nav-item">
+                <a class=@UserTabClass @onclick="OnUserTabClickMethod">User</a>
+            </li>
+        </ul>
+        @if (IsCafeActive)
+        {
+            <div>
+                <form>
+                    <div class="input-group form-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" style="width: 40px;"><i class="fas fa-user"></i></span>
+                        </div>
+                        <input class="form-control text-left" @bind="@CafeName" type="text" placeholder="Cafe Name">
+                    </div>
+                </form>
+            </div>
+        }
+        @if (!IsCafeActive)
+        {
+            <div>
+                <form>
+                    <div class="input-group form-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" style="width: 40px;"><i class="fas fa-user"></i></span>
+                        </div>
+                        <input class="form-control text-left" @bind="@FirstName" type="text" placeholder="First Name">
+                        <input class="form-control text-left" @bind="@LastName" type="text" placeholder="Last Name">
+                    </div>
+                </form>
+            </div>
+        }
+        <div>
+            <form>
+                <div class="input-group form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 40px;"><i class="fas fa-user"></i></span>
+                    </div>
+                    <input class="form-control text-left" @bind="@Username" type="text" placeholder="Username">
+                </div>
+                <div class="input-group form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 40px;"><i
+                                class="fas fa-mobile-alt fa-lg"></i></span>
+                    </div>
+                    <input class="form-control text-left" @bind="@PhoneNumber" type="text" placeholder="Phone number">
+                </div>
+                <div class="input-group form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 40px;"><i class="fas fa-paper-plane"></i></span>
+                    </div>
+                    <input class="form-control text-left" @bind="@Email" type="text" placeholder="Email">
+                </div>
+                <div class="input-group form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 40px;"><i class="fas fa-key"></i></span>
+                    </div>
+                    <input class="form-control text-left" @bind="@Password" type="password" placeholder="Password">
+                </div>
+                <div class="input-group form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 40px;"><i class="fas fa-redo"></i></span>
+                    </div>
+                    <input class="form-control text-left" @bind="@ConfirmPassword" type="password"
+                        placeholder="Confirm Password">
+                </div>
+            </form>
+            <button class="btn btn-primary rounded-pill font-weight-bold w-100 mb-3" @onclick="OnSignupClickMethod">Sign
+                up</button>
+            <a href="/login">
+
+
+
+                <button class="btn btn-outline-primary rounded-pill font-weight-bold w-100">Already have an
+                    account</button>
+            </a>
+        </div>
+    </div>
+</div>
