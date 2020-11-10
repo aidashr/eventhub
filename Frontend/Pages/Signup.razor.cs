@@ -10,14 +10,14 @@ using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Http;
 using Microsoft.JSInterop;
-using frontend;
-using frontend.Shared;
+using Frontend;
+using Frontend.Shared;
 
-namespace frontend.Pages
+namespace Frontend.Pages
 {
     public partial class Signup
     {
-         
+
         private const string ACTIVE_TAB_CLASS = "nav-link font-weight-bold active";
         private const string DEACTIVE_TAB_CLASS = "nav-link font-weight-bold";
         protected string FirstName { get; set; }
@@ -56,6 +56,6 @@ namespace frontend.Pages
         protected async Task OnSignupClickMethod(EventArgs e)
         {
         }
-    
+
     }
 }
