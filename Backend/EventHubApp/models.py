@@ -1,3 +1,13 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
-# Create your models here.
+
+class User(AbstractUser):
+    phone = models.IntegerField(null=True, unique=True)
+    cafe_name = models.CharField(null=True, max_length=100)
+    email = models.EmailField(null=True, max_length=254, unique=True)
+    RegularUser = models.BooleanField(default=False)
+    CafesUser = models.BooleanField(default=False)
+    profile_image = models.ImageField(blank=True, null=True)
+    cafe_address = models.CharField(null=True, max_length=500)
+    is_private = models.BooleanField(default=False)
