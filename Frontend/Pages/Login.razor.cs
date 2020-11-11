@@ -19,10 +19,12 @@ namespace Frontend.Pages
 {
     public partial class Login
     {
+        private const string WITH_ALERT_CLASS = "text-danger";
+        private const string WITHOUT_ALERT_CLASS = "text-danger mb-3";
         protected string Username { get; set; }
-        protected string UsernameAlertContent => IsLoginButtonClicked && string.IsNullOrEmpty(Username) ? "Username is required" : string.Empty;
         protected string Password { get; set; }
-        protected string PasswordAlertContent => IsLoginButtonClicked && string.IsNullOrEmpty(Password) ? "Password is required" : string.Empty;
+        protected string UsernameAlert => IsLoginButtonClicked && string.IsNullOrEmpty(Username) ? "Username is required" : string.Empty;
+        protected string PasswordAlert => IsLoginButtonClicked && string.IsNullOrEmpty(Password) ? "Password is required" : string.Empty;
         protected bool IsLoginButtonClicked { get; set; }
         protected override void OnInitialized()
         {
@@ -30,7 +32,7 @@ namespace Frontend.Pages
 
             IsLoginButtonClicked = false;
         }
-
+        protected string AlertClass(string alert) => string.IsNullOrEmpty(alert) ? WITHOUT_ALERT_CLASS : WITH_ALERT_CLASS;
 
         protected async Task OnLoginButtonClickMethod(EventArgs e)
         {
