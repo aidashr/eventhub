@@ -18,7 +18,7 @@ namespace Frontend.Pages
 {
     public partial class Signup
     {
-        private const string WITH_ALERT_CLASS = "text-danger";
+        private const string WITH_ALERT_CLASS = "text-danger mb-1";
         private const string WITHOUT_ALERT_CLASS = "text-danger mb-3";
         protected string FirstName { get; set; }
         protected string LastName { get; set; }
