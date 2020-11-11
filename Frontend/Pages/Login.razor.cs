@@ -19,7 +19,7 @@ namespace Frontend.Pages
 {
     public partial class Login
     {
-        private const string WITH_ALERT_CLASS = "text-danger";
+        private const string WITH_ALERT_CLASS = "text-danger mb-1";
         private const string WITHOUT_ALERT_CLASS = "text-danger mb-3";
         protected string Username { get; set; }
         protected string Password { get; set; }
