@@ -12,14 +12,14 @@ using Microsoft.AspNetCore.Components.WebAssembly.Http;
 using Microsoft.JSInterop;
 using Frontend;
 using Frontend.Shared;
+using System.Text.RegularExpressions;
 
 namespace Frontend.Pages
 {
     public partial class Signup
     {
-
-        private const string ACTIVE_TAB_CLASS = "nav-link font-weight-bold active";
-        private const string DEACTIVE_TAB_CLASS = "nav-link font-weight-bold";
+        private const string WITH_ALERT_CLASS = "text-danger mb-1";
+        private const string WITHOUT_ALERT_CLASS = "text-danger mb-3";
         protected string FirstName { get; set; }
         protected string LastName { get; set; }
         protected string CafeName { get; set; }
@@ -28,33 +28,140 @@ namespace Frontend.Pages
         protected string Email { get; set; }
         protected string Password { get; set; }
         protected string ConfirmPassword { get; set; }
-        protected bool IsCafeActive { get; set; }
-        protected string CafeTabClass { get; set; }
-        protected string UserTabClass { get; set; }
+        protected string NameAlert
+        {
+            get
+            {
+                if (IsSignupButtonClicked)
+                {
+                    if (string.IsNullOrEmpty(FirstName) && string.IsNullOrEmpty(LastName))
+                        return "First name and last name is required";
+                    if (!string.IsNullOrEmpty(FirstName) && string.IsNullOrEmpty(LastName))
+                        return "Last name is required";
+                    if (string.IsNullOrEmpty(FirstName) && !string.IsNullOrEmpty(LastName))
+                        return "First name is required";
+                    else
+                        return string.Empty;
+                }
+                else
+                    return string.Empty;
+            }
+        }
+        protected string CafeNameAlert
+        {
+            get
+            {
+                if (IsSignupButtonClicked)
+                {
+                    if (string.IsNullOrEmpty(CafeName))
+                        return "Cafe name is required";
+                    else
+                        return string.Empty;
+                }
+                else
+                    return string.Empty;
+            }
+        }
+        protected string UsernameAlert
+        {
+            get
+            {
+                if (IsSignupButtonClicked)
+                {
+                    if (string.IsNullOrEmpty(Username))
+                        return "Username is required";
+                    else
+                        return string.Empty;
+                }
+                else
+                    return string.Empty;
+            }
+        }
+        protected string PhoneNumberAlert
+        {
+            get
+            {
+                if (IsSignupButtonClicked)
+                {
+                    if (string.IsNullOrEmpty(PhoneNumber))
+                        return "Phone number is required";
+                    else
+                        return string.Empty;
+                }
+                else
+                    return string.Empty;
+            }
+        }
+        protected string EmailAlert
+        {
+            get
+            {
+                if (IsSignupButtonClicked)
+                {
+                    if (string.IsNullOrEmpty(Email))
+                        return "Email is required";
 
+                    bool isCorrectEmail = Regex.IsMatch(Email, @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z", RegexOptions.IgnoreCase);
+                    if (!isCorrectEmail)
+                        return "Email address is invalid";
+
+                    else
+                        return string.Empty;
+                }
+                else
+                    return string.Empty;
+            }
+        }
+        protected string PasswordAlert
+        {
+            get
+            {
+                if (IsSignupButtonClicked)
+                {
+                    if (string.IsNullOrEmpty(Password))
+                        return "Password is required";
+                    if (Password.Length < 8)
+                        return "Password must contains at least 8 characters";
+                    else
+                        return string.Empty;
+                }
+                else
+                    return string.Empty;
+            }
+        }
+        protected string ConfirmPasswordAlert
+        {
+            get
+            {
+                if (IsSignupButtonClicked)
+                {
+                    if (string.IsNullOrEmpty(ConfirmPassword))
+                        return "Password confirmation is required";
+                    if (!Password.Equals(ConfirmPassword))
+                        return "Password does not match";
+                    else
+                        return string.Empty;
+                }
+                else
+                    return string.Empty;
+            }
+        }
+        protected bool IsSignupButtonClicked { get; set; }
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
-            IsCafeActive = true;
-            CafeTabClass = ACTIVE_TAB_CLASS;
-            UserTabClass = DEACTIVE_TAB_CLASS;
+            IsSignupButtonClicked = false;
         }
-        protected void OnCafeTabClickMethod(EventArgs e)
-        {
-            IsCafeActive = true;
-            CafeTabClass = ACTIVE_TAB_CLASS;
-            UserTabClass = DEACTIVE_TAB_CLASS;
-        }
-        protected void OnUserTabClickMethod(EventArgs e)
-        {
-            IsCafeActive = false;
-            CafeTabClass = DEACTIVE_TAB_CLASS;
-            UserTabClass = ACTIVE_TAB_CLASS;
-        }
+        protected string AlertClass(string alert) => string.IsNullOrEmpty(alert) ? WITHOUT_ALERT_CLASS : WITH_ALERT_CLASS;
 
-        protected async Task OnSignupClickMethod(EventArgs e)
+        protected async Task OnCafeSignupClickMethod(EventArgs e)
         {
+            IsSignupButtonClicked = true;
+        }
+        protected async Task OnUserSignupClickMethod(EventArgs e)
+        {
+            IsSignupButtonClicked = true;
         }
 
     }
