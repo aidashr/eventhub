@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .api import RegisterAPI, RegisterAPI2, LoginAPI
+from .api import RegisterAPI, RegisterAPI2, LoginAPI, PostEvent
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
@@ -11,5 +11,7 @@ urlpatterns = [
     path('api/all-users/login', LoginAPI.as_view()),
     path('api/all-users/information', views.profile_view),
     path('api/all-users/password-update', views.ChangePasswordView.as_view(), name='password-update'),
-    path('api/main-page', views.get_cafes)
+    path('api/main-page', views.get_cafes),
+    path('api/post-event', PostEvent.as_view()),
+    path('api/edit-event', views.edit_event),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

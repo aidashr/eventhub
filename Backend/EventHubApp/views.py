@@ -3,9 +3,29 @@ from rest_framework.response import Response
 from rest_framework import status, generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
-from .serializers import UserSerializer, UserSerializer2, UpdateRegularUserSerializer, UpdateCafeSerializer, ChangePasswordSerializer
+from .serializers import UserSerializer, UserSerializer2, UpdateRegularUserSerializer, UpdateCafeSerializer,\
+    ChangePasswordSerializer, EventSerializer
 from .permissions import IsOwner
-from .models import User
+from .models import User, Event
+
+
+@api_view(['PUT', ])
+@permission_classes((IsAuthenticated, ))
+def edit_event(request):
+    try:
+        event = Event.objects.get(id=request.data.get('id'))
+
+        ser = EventSerializer(event, data=request.data)
+
+        if ser.is_valid():
+            ser.save()
+            return Response(ser.data, status=status.HTTP_200_OK)
+
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['GET', 'PUT'])

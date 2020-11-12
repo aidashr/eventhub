@@ -11,3 +11,12 @@ class User(AbstractUser):
     profile_image = models.ImageField(blank=True, null=True)
     cafe_address = models.CharField(null=True, max_length=500)
     is_private = models.BooleanField(default=False)
+
+
+class Event(models.Model):
+    name = models.CharField(null=True, max_length=50)
+    description = models.CharField(null=True, max_length=450)
+    created_at = models.DateTimeField(auto_now=True, auto_now_add=False)
+    image = models.ImageField(blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+
