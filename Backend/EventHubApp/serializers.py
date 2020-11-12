@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import User, Event
 from django.contrib.auth import authenticate
 
 
@@ -84,3 +84,21 @@ class ChangePasswordSerializer(serializers.Serializer):
     model = User
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
+
+
+class EventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = '__all__'
+        depth = 1
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        event = Event.objects.create(**validated_data, user=user)
+        return event
+
+    def update(self, instance, validated_data):
+        obj = super().update(instance, validated_data)
+        obj.CafesUser = True
+        obj.save()
+        return obj

@@ -1,14 +1,34 @@
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from knox.models import AuthToken
-from .serializers import UserSerializer, RegisterSerializer, RegisterSerializer2, UserSerializer2, LoginSerializer
+from .serializers import UserSerializer, RegisterSerializer, RegisterSerializer2, UserSerializer2, LoginSerializer, EventSerializer
+
+
+class PostEvent(generics.GenericAPIView):
+    serializer_class = EventSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        return Response({
+            "event": EventSerializer(user, context=self.get_serializer_context()).data
+        })
+
+    def put(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        return Response({
+            "event": EventSerializer(user, context=self.get_serializer_context()).data
+        })
+
 
 
 class RegisterAPI(generics.GenericAPIView):
     serializer_class = RegisterSerializer
 
     def post(self, request, *args, **kwargs):
-        print(request.data.get('is_private'))
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
