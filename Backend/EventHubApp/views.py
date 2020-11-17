@@ -72,11 +72,29 @@ def profile_view(request):
 def get_cafes(request):
     try:
         users = User.objects.filter(CafesUser=True)
-        ser = UserSerializer2(users, many=True)
+        user_ser = UserSerializer2(users, many=True)
     except:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    return Response(ser.data, status=status.HTTP_200_OK)
+    try:
+        events = Event.objects.all()
+        event_ser = EventSerializer(events, many=True)
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    new_users = user_ser.data
+
+    if len(new_users) > 10:
+        for i in range(len(new_users) - 10):
+            new_users.pop(0)
+
+    new_events = event_ser.data
+
+    if len(new_events) > 10:
+        for i in range(len(new_events) - 10):
+            new_events.pop(0)
+
+    return Response(new_users + new_events, status=status.HTTP_200_OK)
 
 
 class ChangePasswordView(generics.UpdateAPIView):
