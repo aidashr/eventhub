@@ -2,6 +2,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status, generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.generics import ListAPIView
+from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.pagination import PageNumberPagination
 
 from .serializers import UserSerializer, UserSerializer2, UpdateRegularUserSerializer, UpdateCafeSerializer,\
     ChangePasswordSerializer, EventSerializer
@@ -127,3 +130,19 @@ class ChangePasswordView(generics.UpdateAPIView):
             return Response(response)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class SearchEvent(ListAPIView):
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+    pagination_class = PageNumberPagination
+    filter_backends = (SearchFilter, OrderingFilter)
+    search_fields = ['name', ]
+
+
+class SearchCafe(ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer2
+    pagination_class = PageNumberPagination
+    filter_backends = (SearchFilter, OrderingFilter)
+    search_fields = ['cafe_name', ]

@@ -48,7 +48,9 @@ AUTH_USER_MODEL = 'EventHubApp.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES':
-    ('knox.auth.TokenAuthentication',)
+    ('knox.auth.TokenAuthentication',),
+    'DEFAULT_PAGINATION_CLASSES': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 2,
 }
 
 MIDDLEWARE = [
