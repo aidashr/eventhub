@@ -14,4 +14,6 @@ urlpatterns = [
     path('api/main-page', views.get_cafes),
     path('api/post-event', PostEvent.as_view()),
     path('api/edit-event', views.edit_event),
+    path('api/search-event', views.SearchEvent.as_view()),
+    path('api/search-cafe', views.SearchCafe.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
