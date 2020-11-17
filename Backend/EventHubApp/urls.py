@@ -6,14 +6,13 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('api/auth', include('knox.urls')),
-    path('api/user/signup', RegisterAPI.as_view()),
-    path('api/cafe/signup', RegisterAPI2.as_view()),
-    path('api/all-users/login', LoginAPI.as_view()),
-    path('api/all-users/information', views.profile_view),
-    path('api/all-users/password-update', views.ChangePasswordView.as_view(), name='password-update'),
-    path('api/main-page', views.get_cafes),
-    path('api/post-event', PostEvent.as_view()),
-    path('api/edit-event', views.edit_event),
-    path('api/search-event', views.SearchEvent.as_view()),
-    path('api/search-cafe', views.SearchCafe.as_view()),
+    path('Users/regular/sign-up', RegisterAPI.as_view()),
+    path('Users/cafe/sign-up', RegisterAPI2.as_view()),
+    path('Users/login', LoginAPI.as_view()),
+    path('Users/profile', views.profile_view),
+    path('Users/change-password', views.ChangePasswordView.as_view(), name='password-update'),
+    path('main-page', views.get_cafes),
+    path('Users/event', PostEvent.as_view()),
+    path('search-event', views.SearchEvent.as_view()),
+    path('search-cafe', views.SearchCafe.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
