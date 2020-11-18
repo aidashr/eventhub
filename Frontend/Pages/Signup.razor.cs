@@ -13,13 +13,19 @@ using Microsoft.JSInterop;
 using Frontend;
 using Frontend.Shared;
 using System.Text.RegularExpressions;
+using Frontend.Api;
+using System.Diagnostics;
 
 namespace Frontend.Pages
 {
     public partial class Signup
     {
+        [Inject]
+        private NavigationManager NavigationManager { get; set; }
+        [Inject]
+        IJSRuntime JSRuntime { get; set; }
         private const string WITH_ALERT_CLASS = "text-danger mb-1";
-        private const string WITHOUT_ALERT_CLASS = "text-danger mb-3";
+        private const string WITHOUT_ALERT_CLASS = "mb-3";
         protected string FirstName { get; set; }
         protected string LastName { get; set; }
         protected string CafeName { get; set; }
@@ -155,13 +161,58 @@ namespace Frontend.Pages
         }
         protected string AlertClass(string alert) => string.IsNullOrEmpty(alert) ? WITHOUT_ALERT_CLASS : WITH_ALERT_CLASS;
 
+        protected async Task OnTabControlItemsClickMethod(EventArgs e)
+        {
+            IsSignupButtonClicked = false;
+        }
+
         protected async Task OnCafeSignupClickMethod(EventArgs e)
         {
             IsSignupButtonClicked = true;
+
+            if (string.IsNullOrEmpty(UsernameAlert) && string.IsNullOrEmpty(CafeNameAlert) && string.IsNullOrEmpty(EmailAlert) && string.IsNullOrEmpty(PasswordAlert) && string.IsNullOrEmpty(PhoneNumberAlert))
+            {
+                Dictionary<string, string> parameters = new Dictionary<string, string>();
+
+                Dictionary<string, string> body = new Dictionary<string, string>();
+                body.Add("username", Username);
+                body.Add("cafe_name", CafeName);
+                body.Add("email", Email);
+                body.Add("password", Password);
+                body.Add("phone", PhoneNumber);
+                body.Add("CafesUser", "true");
+
+                var httpResponseMessage = await ApiClient.CallAsync(HttpMethod.Post, Endpoints.CafeSignup, parameters, body);
+                var result = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
+                Debug.WriteLine(result);
+
+                NavigationManager.NavigateTo("/login");
+            }
+
         }
         protected async Task OnUserSignupClickMethod(EventArgs e)
         {
             IsSignupButtonClicked = true;
+
+            if (string.IsNullOrEmpty(UsernameAlert) && string.IsNullOrEmpty(NameAlert) && string.IsNullOrEmpty(EmailAlert) && string.IsNullOrEmpty(PasswordAlert) && string.IsNullOrEmpty(PhoneNumberAlert))
+            {
+                Dictionary<string, string> parameters = new Dictionary<string, string>();
+
+                Dictionary<string, string> body = new Dictionary<string, string>();
+                body.Add("username", Username);
+                body.Add("first_name", FirstName);
+                body.Add("last_name", LastName);
+                body.Add("email", Email);
+                body.Add("password", Password);
+                body.Add("phone", PhoneNumber);
+                body.Add("RegularUser", "true");
+
+                var httpResponseMessage = await ApiClient.CallAsync(HttpMethod.Post, Endpoints.UserSignup, parameters, body);
+                var result = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
+                Debug.WriteLine(result);
+
+                NavigationManager.NavigateTo("/login");
+            }
         }
 
     }
