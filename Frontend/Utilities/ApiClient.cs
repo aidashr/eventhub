@@ -17,9 +17,10 @@ namespace Frontend.Api
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            string finalEndpoint = 0 < parameters.Count() ? endpoint + "?" + string.Join("&", parameters.Select(pair => pair.Key + "=" + pair.Value).ToArray()) : endpoint;
+            string finalEndpoint = null != parameters ? endpoint + "?" + string.Join("&", parameters.Select(pair => pair.Key + "=" + pair.Value).ToArray()) : endpoint;
             var request = new HttpRequestMessage(method, finalEndpoint);
-            request.Content = new FormUrlEncodedContent(body);
+            if (null != body)
+                request.Content = new FormUrlEncodedContent(body);
 
             return await client.SendAsync(request).ConfigureAwait(false);
         }
