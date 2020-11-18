@@ -161,7 +161,7 @@ namespace Frontend.Pages
         }
         protected string AlertClass(string alert) => string.IsNullOrEmpty(alert) ? WITHOUT_ALERT_CLASS : WITH_ALERT_CLASS;
 
-        protected async Task OnTabControlItemsClickMethod(EventArgs e)
+        protected void OnTabControlItemsClickMethod(EventArgs e)
         {
             IsSignupButtonClicked = false;
         }
@@ -172,8 +172,6 @@ namespace Frontend.Pages
 
             if (string.IsNullOrEmpty(UsernameAlert) && string.IsNullOrEmpty(CafeNameAlert) && string.IsNullOrEmpty(EmailAlert) && string.IsNullOrEmpty(PasswordAlert) && string.IsNullOrEmpty(PhoneNumberAlert))
             {
-                Dictionary<string, string> parameters = new Dictionary<string, string>();
-
                 Dictionary<string, string> body = new Dictionary<string, string>();
                 body.Add("username", Username);
                 body.Add("cafe_name", CafeName);
@@ -182,11 +180,12 @@ namespace Frontend.Pages
                 body.Add("phone", PhoneNumber);
                 body.Add("CafesUser", "true");
 
-                var httpResponseMessage = await ApiClient.CallAsync(HttpMethod.Post, Endpoints.CafeSignup, parameters, body);
+                var httpResponseMessage = await ApiClient.CallAsync(HttpMethod.Post, Endpoints.CafeSignup, null, body);
                 var result = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
                 Debug.WriteLine(result);
 
-                NavigationManager.NavigateTo("/login");
+                if (httpResponseMessage.IsSuccessStatusCode)
+                    NavigationManager.NavigateTo("/login");
             }
 
         }
@@ -196,8 +195,6 @@ namespace Frontend.Pages
 
             if (string.IsNullOrEmpty(UsernameAlert) && string.IsNullOrEmpty(NameAlert) && string.IsNullOrEmpty(EmailAlert) && string.IsNullOrEmpty(PasswordAlert) && string.IsNullOrEmpty(PhoneNumberAlert))
             {
-                Dictionary<string, string> parameters = new Dictionary<string, string>();
-
                 Dictionary<string, string> body = new Dictionary<string, string>();
                 body.Add("username", Username);
                 body.Add("first_name", FirstName);
@@ -207,11 +204,12 @@ namespace Frontend.Pages
                 body.Add("phone", PhoneNumber);
                 body.Add("RegularUser", "true");
 
-                var httpResponseMessage = await ApiClient.CallAsync(HttpMethod.Post, Endpoints.UserSignup, parameters, body);
+                var httpResponseMessage = await ApiClient.CallAsync(HttpMethod.Post, Endpoints.UserSignup, null, body);
                 var result = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
                 Debug.WriteLine(result);
 
-                NavigationManager.NavigateTo("/login");
+                if (httpResponseMessage.IsSuccessStatusCode)
+                    NavigationManager.NavigateTo("/login");
             }
         }
 
