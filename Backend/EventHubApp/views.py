@@ -36,7 +36,7 @@ def edit_event(request):
 def profile_view(request):
     if request.method == 'GET':
         try:
-            user = User.objects.get(username=request.data.get('username'))
+            user = User.objects.get(username=request.query_params.get('username'))
 
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -51,10 +51,11 @@ def profile_view(request):
 
     elif request.method == 'PUT':
         try:
-            user = User.objects.get(username=request.data.get('username'))
-
+            new_data = request.data
+            new_data.update({'username': request.query_params.get('username')})
+            user = User.objects.get(username=request.query_params.get('username'))
             if user.RegularUser:
-                ser = UpdateRegularUserSerializer(user, data=request.data)
+                ser = UpdateRegularUserSerializer(user, data=new_data)
 
             else:
                 ser = UpdateCafeSerializer(user, data=request.data)
@@ -106,6 +107,7 @@ class ChangePasswordView(generics.UpdateAPIView):
     permission_classes = (IsAuthenticated, IsOwner)
 
     def get_object(self, queryset=None):
+        self.request.data.update({'username': self.request.query_params.get('username')})
         obj = self.request.user
         return obj
 
