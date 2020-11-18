@@ -2,8 +2,8 @@ namespace Frontend.Pages
 {
     public static class Endpoints
     {
-        public static string Login => "api/all-users/login";
-        public static string UserSignup => "api/user/signup";
+        public static string Login => "/Users/login";
+        public static string UserSignup => "Users/regular/sign-up";
         public static string CafeSignup => "Users/cafe/sign-up";
     }
 }
