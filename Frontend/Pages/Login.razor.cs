@@ -14,11 +14,15 @@ using Frontend;
 using Frontend.Shared;
 using Radzen;
 using Radzen.Blazor;
+using System.Diagnostics;
+using Frontend.Api;
 
 namespace Frontend.Pages
 {
     public partial class Login
     {
+        [Inject]
+        private NavigationManager NavigationManager { get; set; }
         private const string WITH_ALERT_CLASS = "text-danger mb-1";
         private const string WITHOUT_ALERT_CLASS = "text-danger mb-3";
         protected string Username { get; set; }
@@ -38,7 +42,20 @@ namespace Frontend.Pages
         {
             IsLoginButtonClicked = true;
 
+            if (string.IsNullOrEmpty(UsernameAlert) && string.IsNullOrEmpty(PasswordAlert))
+            {
+                Dictionary<string, string> parameters = new Dictionary<string, string>();
 
+                Dictionary<string, string> body = new Dictionary<string, string>();
+                body.Add("username", Username);
+                body.Add("password", Password);
+
+                var httpResponseMessage = await ApiClient.CallAsync(HttpMethod.Post, Endpoints.UserSignup, parameters, body);
+                var result = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
+                Debug.WriteLine(result);
+
+                NavigationManager.NavigateTo("/profile");
+            }
         }
 
     }
