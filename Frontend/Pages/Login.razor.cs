@@ -45,16 +45,17 @@ namespace Frontend.Pages
             if (string.IsNullOrEmpty(UsernameAlert) && string.IsNullOrEmpty(PasswordAlert))
             {
                 Dictionary<string, string> parameters = new Dictionary<string, string>();
+                parameters.Add("username", Username);
+                parameters.Add("password", Password);
 
                 Dictionary<string, string> body = new Dictionary<string, string>();
-                body.Add("username", Username);
-                body.Add("password", Password);
 
-                var httpResponseMessage = await ApiClient.CallAsync(HttpMethod.Post, Endpoints.UserSignup, parameters, body);
+                var httpResponseMessage = await ApiClient.CallAsync(HttpMethod.Get, Endpoints.Login, parameters, null);
                 var result = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
                 Debug.WriteLine(result);
 
-                NavigationManager.NavigateTo("/profile");
+                if (httpResponseMessage.IsSuccessStatusCode)
+                    NavigationManager.NavigateTo("/profile");
             }
         }
 
