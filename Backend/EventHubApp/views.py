@@ -80,17 +80,23 @@ def get_cafes(request):
     except:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    try:
-        events = Event.objects.all()
-        event_ser = EventSerializer(events, many=True)
-    except:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
     new_users = user_ser.data
 
     if len(new_users) > 10:
         for i in range(len(new_users) - 10):
             new_users.pop(0)
+
+    return Response(new_users, status=status.HTTP_200_OK)
+
+
+@api_view(['GET', ])
+@permission_classes((AllowAny,))
+def get_events(request):
+    try:
+        events = Event.objects.all()
+        event_ser = EventSerializer(events, many=True)
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
     new_events = event_ser.data
 
@@ -98,7 +104,7 @@ def get_cafes(request):
         for i in range(len(new_events) - 10):
             new_events.pop(0)
 
-    return Response(new_users + new_events, status=status.HTTP_200_OK)
+    return Response(new_events, status=status.HTTP_200_OK)
 
 
 class ChangePasswordView(generics.UpdateAPIView):
