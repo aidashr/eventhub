@@ -6,7 +6,7 @@ from rest_framework.generics import ListAPIView
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.pagination import PageNumberPagination
 
-from .serializers import UserSerializer, UserSerializer2, UpdateRegularUserSerializer, UpdateCafeSerializer,\
+from .serializers import UserSerializer, CafeSerializer, UpdateRegularUserSerializer, UpdateCafeSerializer,\
     ChangePasswordSerializer, EventSerializer
 from .permissions import IsOwner
 from .models import User, Event
@@ -41,11 +41,11 @@ def profile_view(request):
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        if user.RegularUser:
+        if user.is_regular:
             ser = UserSerializer(user)
 
         else:
-            ser = UserSerializer2(user)
+            ser = CafeSerializer(user)
 
         return Response(ser.data, status=status.HTTP_200_OK)
 
@@ -54,7 +54,7 @@ def profile_view(request):
             new_data = request.data
             new_data.update({'username': request.query_params.get('username')})
             user = User.objects.get(username=request.query_params.get('username'))
-            if user.RegularUser:
+            if user.is_regular:
                 ser = UpdateRegularUserSerializer(user, data=new_data)
 
             else:
@@ -75,8 +75,8 @@ def profile_view(request):
 @permission_classes((AllowAny,))
 def get_cafes(request):
     try:
-        users = User.objects.filter(CafesUser=True)
-        user_ser = UserSerializer2(users, many=True)
+        users = User.objects.filter(is_regular=False)
+        user_ser = CafeSerializer(users, many=True)
     except:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -120,7 +120,6 @@ class ChangePasswordView(generics.UpdateAPIView):
     def update(self, request, *args, **kwargs):
         self.object = self.get_object()
         serializer = self.get_serializer(data=request.data)
-
         if serializer.is_valid():
             # Check old password
             if not self.object.check_password(serializer.data.get("old_password")):
@@ -145,12 +144,12 @@ class SearchEvent(ListAPIView):
     serializer_class = EventSerializer
     pagination_class = PageNumberPagination
     filter_backends = (SearchFilter, OrderingFilter)
-    search_fields = ['name', ]
+    search_fields = ['title', ]
 
 
 class SearchCafe(ListAPIView):
     queryset = User.objects.all()
-    serializer_class = UserSerializer2
+    serializer_class = CafeSerializer
     pagination_class = PageNumberPagination
     filter_backends = (SearchFilter, OrderingFilter)
     search_fields = ['cafe_name', ]

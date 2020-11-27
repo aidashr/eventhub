@@ -7,22 +7,22 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'first_name', 'last_name',
-                  'phone', 'RegularUser', 'CafesUser', 'profile_image', 'is_private')
+                  'phone_number', 'is_regular', 'profile_image', 'is_private')
 
 
-class UserSerializer2(serializers.ModelSerializer):
+class CafeSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'cafe_name',
-                  'phone', 'RegularUser', 'CafesUser', 'profile_image', 'cafe_address')
+                  'phone_number', 'is_regular', 'profile_image', 'cafe_address')
 
 
-class RegisterSerializer(serializers.ModelSerializer):
+class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password', 'first_name', 'last_name', 'phone',
-                  'RegularUser', 'CafesUser', 'cafe_address', 'is_private')
-        extra_kwargs = {'paswword': {'write_only': True}}
+        fields = ('id', 'username', 'email', 'password', 'first_name', 'last_name', 'phone_number',
+                  'is_regular', 'cafe_address', 'is_private')
+        extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
@@ -30,11 +30,11 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
-class RegisterSerializer2(serializers.ModelSerializer):
+class CafeRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password', 'cafe_name', 'phone',
-                  'cafe_address', 'RegularUser', 'CafesUser')
+        fields = ('id', 'username', 'email', 'password', 'cafe_name', 'phone_number',
+                  'cafe_address', 'is_regular')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -58,11 +58,11 @@ class UpdateRegularUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'first_name', 'last_name',
-                  'phone', 'RegularUser', 'CafesUser', 'profile_image', 'cafe_address', 'is_private')
+                  'phone_number', 'is_regular', 'profile_image', 'cafe_address', 'is_private')
 
     def update(self, instance, validated_data):
         obj = super().update(instance, validated_data)
-        obj.RegularUser = True
+        obj.is_regular = True
         obj.save()
         return obj
 
@@ -71,11 +71,11 @@ class UpdateCafeSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'cafe_name',
-                  'phone', 'RegularUser', 'CafesUser', 'profile_image', 'cafe_address')
+                  'phone_number', 'is_regular', 'profile_image', 'cafe_address')
 
     def update(self, instance, validated_data):
         obj = super().update(instance, validated_data)
-        obj.CafesUser = True
+        obj.is_regular = False
         obj.save()
         return obj
 
@@ -89,7 +89,7 @@ class ChangePasswordSerializer(serializers.Serializer):
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
-        fields = '__all__'
+        fields = 'all'
         depth = 1
 
     def create(self, validated_data):
@@ -99,6 +99,6 @@ class EventSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         obj = super().update(instance, validated_data)
-        obj.CafesUser = True
+        obj.is_regular = False
         obj.save()
         return obj
