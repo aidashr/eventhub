@@ -12,31 +12,13 @@ from .permissions import IsOwner
 from .models import User, Event
 
 
-@api_view(['PUT', ])
-@permission_classes((IsAuthenticated, ))
-def edit_event(request):
-    try:
-        event = Event.objects.get(id=request.data.get('id'))
-
-        ser = EventSerializer(event, data=request.data)
-
-        if ser.is_valid():
-            ser.save()
-            return Response(ser.data, status=status.HTTP_200_OK)
-
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
-    except:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-
 @api_view(['GET', 'PUT'])
-@permission_classes((IsOwner, IsAuthenticated))
-def profile_view(request):
+@permission_classes((IsAuthenticated, ))
+# @permission_classes((IsOwner, IsAuthenticated))
+def profile_view(request, **kwargs):
     if request.method == 'GET':
         try:
-            user = User.objects.get(username=request.query_params.get('username'))
+            user = User.objects.get(id=kwargs.get('id'))
 
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -52,8 +34,8 @@ def profile_view(request):
     elif request.method == 'PUT':
         try:
             new_data = request.data
-            new_data.update({'username': request.query_params.get('username')})
-            user = User.objects.get(username=request.query_params.get('username'))
+            new_data.update({'id': kwargs.get('id')})
+            user = User.objects.get(id=kwargs.get('id'))
             if user.is_regular:
                 ser = UpdateRegularUserSerializer(user, data=new_data)
 
@@ -110,10 +92,10 @@ def get_events(request):
 class ChangePasswordView(generics.UpdateAPIView):
     serializer_class = ChangePasswordSerializer
     model = User
-    permission_classes = (IsAuthenticated, IsOwner)
+    permission_classes = (IsAuthenticated, )
 
     def get_object(self, queryset=None):
-        self.request.data.update({'username': self.request.query_params.get('username')})
+        self.request.data.update({'id': self.kwargs.get('id')})
         obj = self.request.user
         return obj
 
@@ -121,10 +103,8 @@ class ChangePasswordView(generics.UpdateAPIView):
         self.object = self.get_object()
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            # Check old password
             if not self.object.check_password(serializer.data.get("old_password")):
                 return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
-            # set_password also hashes the password that the user will get
             self.object.set_password(serializer.data.get("new_password"))
             self.object.save()
             response = {
