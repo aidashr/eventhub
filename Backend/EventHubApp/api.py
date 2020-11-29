@@ -1,11 +1,13 @@
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.response import Response
 from knox.models import AuthToken
 from .serializers import UserSerializer, UserRegisterSerializer, CafeRegisterSerializer, CafeSerializer, LoginSerializer, \
     EventSerializer
 
+from .models import Event
 
-class PostEvent(generics.GenericAPIView):
+
+class EventAPI(generics.GenericAPIView):
     serializer_class = EventSerializer
 
     def post(self, request, *args, **kwargs):
@@ -13,7 +15,7 @@ class PostEvent(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         return Response({
-            "event": EventSerializer(user, context=self.get_serializer_context()).data
+            "event": serializer.data
         })
 
     def put(self, request, *args, **kwargs):
@@ -23,6 +25,22 @@ class PostEvent(generics.GenericAPIView):
         return Response({
             "event": EventSerializer(user, context=self.get_serializer_context()).data
         })
+
+    def get(self, request, *args, **kwargs):
+        try:
+            event = Event.objects.get(id=request.query_params.get('id'))
+
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        ser = EventSerializer(event)
+
+        return Response(ser.data, status=status.HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
+        event = Event.objects.get(id=request.query_params.get('id')).delete()
+        ser = EventSerializer(event)
+        return Response(ser.data, status=status.HTTP_200_OK)
 
 
 class RegisterAPI(generics.GenericAPIView):
