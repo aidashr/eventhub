@@ -89,7 +89,7 @@ class ChangePasswordSerializer(serializers.Serializer):
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
-        fields = 'all'
+        fields = '__all__   '
         depth = 1
 
     def create(self, validated_data):
