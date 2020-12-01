@@ -5,11 +5,52 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.generics import ListAPIView
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.pagination import PageNumberPagination
+from datetime import datetime
 
 from .serializers import UserSerializer, CafeSerializer, UpdateRegularUserSerializer, UpdateCafeSerializer,\
     ChangePasswordSerializer, EventSerializer
 from .permissions import IsOwner
 from .models import User, Event
+
+
+@api_view(['GET', ])
+@permission_classes((AllowAny,))
+def get_past_events(request, **kwargs):
+    try:
+        events = Event.objects.filter(user_id=kwargs.get('id'))
+        event_ser = EventSerializer(events, many=True)
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    new_event = event_ser.data
+
+    counter = 0
+    for i in range(len(new_event)):
+        if datetime.strptime(str(new_event[i - counter].get('start_time')).split('+')[0], '%Y-%m-%dT%H:%M:%S') > datetime.now():
+            new_event.pop(i - counter)
+            counter += 1
+
+    return Response(new_event, status=status.HTTP_200_OK)
+
+
+@api_view(['GET', ])
+@permission_classes((AllowAny,))
+def get_future_events(request, **kwargs):
+    try:
+        events = Event.objects.filter(user_id=kwargs.get('id'))
+        event_ser = EventSerializer(events, many=True)
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    new_event = event_ser.data
+
+    counter = 0
+    for i in range(len(new_event)):
+        if datetime.strptime(str(new_event[i - counter].get('start_time')).split('+')[0], '%Y-%m-%dT%H:%M:%S') <= datetime.now():
+            new_event.pop(i - counter)
+            counter += 1
+
+    return Response(new_event, status=status.HTTP_200_OK)
 
 
 @api_view(['GET', 'PUT'])

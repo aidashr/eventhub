@@ -17,4 +17,5 @@ class Event(models.Model):
     description = models.CharField(null=True, max_length=450)
     created_at = models.DateTimeField(auto_now=True, auto_now_add=False)
     image = models.ImageField(blank=True, null=True)
+    start_time = models.DateTimeField(null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
