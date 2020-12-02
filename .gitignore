@@ -4,14 +4,21 @@ Backend/db.sqlite3
 # Created by https://www.toptal.com/developers/gitignore/api/vs,vscode,dotnetcore,venv
 # Edit at https://www.toptal.com/developers/gitignore?templates=vs,vscode,dotnetcore,venv
 
-### DotnetCore ###
-# .NET Core build folders
-bin/
-obj/
+### react ###
+.DS_*
+*.log
+logs
+**/*.backup.*
+**/*.back.*
 
-# Common node modules locations
-/node_modules
-/wwwroot/node_modules
+node_modules
+bower_components
+
+*.sublime*
+
+psd
+thumb
+sketch
 
 ### venv ###
 # Virtualenv
