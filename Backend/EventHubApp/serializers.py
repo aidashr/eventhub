@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Event
+from .models import User, Event, Participation
 from django.contrib.auth import authenticate
 
 
@@ -102,3 +102,9 @@ class EventSerializer(serializers.ModelSerializer):
         obj.is_regular = False
         obj.save()
         return obj
+
+
+class ParticipateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Participation
+        fields = '__all__'

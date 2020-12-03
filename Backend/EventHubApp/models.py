@@ -19,3 +19,8 @@ class Event(models.Model):
     image = models.ImageField(blank=True, null=True)
     start_time = models.DateTimeField(null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+
+
+class Participation(models.Model):
+    user = models.ManyToManyField(User)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, null=True)
