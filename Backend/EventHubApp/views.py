@@ -8,9 +8,40 @@ from rest_framework.pagination import PageNumberPagination
 from datetime import datetime
 
 from .serializers import UserSerializer, CafeSerializer, UpdateRegularUserSerializer, UpdateCafeSerializer,\
-    ChangePasswordSerializer, EventSerializer
+    ChangePasswordSerializer, EventSerializer, ParticipateSerializer
 from .permissions import IsOwner
-from .models import User, Event
+from .models import User, Event, Participation
+
+
+# class ParticipanatsAPI(generics.GenericAPIView):
+#     queryset = Participation.objects.all()
+#     serializer_class = ParticipateSerializer
+#
+#     def get(self, request, **kwargs):
+#         print('-')
+#         post = Participation.objects.filter(event_id=kwargs.get('id'))
+#         print(post)
+#         like_count = post.user.count()
+#         serializer = ParticipateSerializer(like_count, many=True)
+#         return Response(serializer.data)
+
+
+class ParticipateAPI(generics.GenericAPIView):
+    queryset = Participation.objects.all()
+    serializer_class = ParticipateSerializer
+
+    def post(self, request, **kwargs):
+        new_data = {'event': request.data.get('event'),
+                    'user': {kwargs.get('id')}
+                    }
+
+        serializer = ParticipateSerializer(data=new_data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET', ])
