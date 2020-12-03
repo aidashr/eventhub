@@ -1,7 +1,6 @@
 import { Component } from 'react';
 import { Redirect } from 'react-router';
 import axios from "axios";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Cookies from 'universal-cookie';
 
 
@@ -77,53 +76,39 @@ class Login extends Component {
         return <Redirect to={{ pathname: "/user-profile" }} />;
     }
     return (
-      <div className="outer">
-        <div className="inner">
+      <div className="container-md">
+        <div className="row justify-content-center pt-2 pt-md-4">
+          <div className="col-auto shadow-lg border border-secondry rounded p-3" style={{ width: 400 }}>
+            <form onSubmit={this.handleSubmit}>
 
-          <h4 className="text-center font-weight-bold mb-4">Login</h4>
+              <h5 className="text text-center font-weight-bold mb-4">Login</h5>
 
-          <form onSubmit={this.handleSubmit}>
+              <small className="text text-danger">{this.state.er}</small>
 
-            <h6 style={{ color: 'red' }}><i>{this.state.er}</i></h6>
+              <div className="input-group mb-2">
+                <div className="input-group-prepend">
+                  <div className="input-group-text">
+                    <i className="fas fa-user fa-lg" style={{ width: 20 }}></i>
+                  </div>
+                </div>
+                <input type="text" className="form-control" value={this.state.username} onChange={this.handleChange} placeholder="Username" />
+              </div>
+              {this.state.errusername ? <small className="text text-danger">{this.state.errusernameText}</small> : null}
 
-            <div className="form-group">
-              <input
-                type="username"
-                name='username'
-                username={this.state.username}
-                onChange={this.handleChange}
-                autoComplete="off"
-                type="text" className="form-control" placeholder="Username" />
+              <div className="input-group mb-2">
+                <div className="input-group-prepend">
+                  <div className="input-group-text">
+                    <i className="fas fa-lock fa-lg" style={{ width: 20 }}></i>
+                  </div>
+                </div>
+                <input type="text" className="form-control" value={this.state.password} onChange={this.handleChange} placeholder="Password" />
+              </div>
+              {this.state.errpassword ? <small className="text text-danger">{this.state.errpasswordText}</small> : null}
 
-              {this.state.errusername ? <h6 style={{ color: 'red' }}><i>{this.state.errusernameText}</i></h6> : null}
-            </div>
-
-            <div className="form-group">
-              <input
-                type="password"
-                name='password'
-                className="form-control"
-                password={this.state.password}
-                placeholder="Password"
-                onChange={this.handleChange}
-                type="password" className="form-control"
-              />
-
-              {this.state.errpassword ? <h6 style={{ color: 'red' }}><i>{this.state.errpasswordText}</i></h6> : null}
-            </div>
-
-            <button
-              className="btn btn-primary rounded-pill font-weight-bold w-100 mb-3"
-              value="Submit"
-              onClick={this.handleSubmit}
-              onSubmit={this.handleSubmit}
-            >
-              Login
-            </button>
-
-            <Link to="/sign-up" className="btn btn-outline-primary rounded-pill font-weight-bold w-100">Create an account</Link>
-
-          </form>
+              <button className="btn btn-primary rounded-pill font-weight-bold w-100 mb-3" value="Submit" onClick={this.handleSubmit} onSubmit={this.handleSubmit}>Login</button>
+              <a className="btn btn-outline-primary rounded-pill font-weight-bold w-100" href="/sign-up">Create an account</a>
+            </form>
+          </div>
         </div>
       </div>
     );
