@@ -1,0 +1,12 @@
+body {
+  min-height: 100vh;
+  display: flex;
+  font-weight: 400;
+  font-family: sans-serif;
+  background: #e8e8e8;
+  /* background: linear-gradient(to right, #8d5b4e, #9b849c); */
+}
+
+.HomePage {
+  text-align: center;
+}
