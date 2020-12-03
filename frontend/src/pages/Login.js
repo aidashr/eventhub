@@ -91,7 +91,7 @@ class Login extends Component {
                     <i className="fas fa-user fa-lg" style={{ width: 20 }}></i>
                   </div>
                 </div>
-                <input type="text" className="form-control" value={this.state.username} onChange={this.handleChange} placeholder="Username" />
+                <input type="text" className="form-control" name="username" username={this.state.username} onChange={this.handleChange} placeholder="Username" />
               </div>
               {this.state.errusername ? <small className="text text-danger">{this.state.errusernameText}</small> : null}
 
@@ -101,7 +101,7 @@ class Login extends Component {
                     <i className="fas fa-lock fa-lg" style={{ width: 20 }}></i>
                   </div>
                 </div>
-                <input type="text" className="form-control" value={this.state.password} onChange={this.handleChange} placeholder="Password" />
+                <input type="text" className="form-control" name="password" password={this.state.password} onChange={this.handleChange} placeholder="Password" />
               </div>
               {this.state.errpassword ? <small className="text text-danger">{this.state.errpasswordText}</small> : null}
 
