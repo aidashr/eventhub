@@ -1,0 +1,91 @@
+.profile-head {
+  transform: translateY(5rem);
+}
+
+.cover {
+  background-color: #145374;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.profileImage {
+  height: 100;
+  width: 130;
+  padding-bottom: 10;
+}
+
+.profile {
+  padding-right: 40px;
+  padding-left: 40px;
+  margin-top: 200;
+}
+
+.row {
+  margin-bottom: 0;
+}
+
+body,
+html,
+.App,
+#root,
+.outer {
+  width: 100%;
+  height: 100%;
+}
+
+.inner {
+  width: 400px;
+  margin: auto;
+  background: #ffffff;
+  box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
+  padding: 40px 55px 45px 55px;
+  border-radius: 15px;
+  transition: all 0.3s;
+}
+
+.outer h3 {
+  text-align: center;
+  margin: 0;
+  line-height: 1;
+  padding-bottom: 20px;
+}
+
+.CafeSignUpTab {
+  padding-top: 20px;
+}
+
+.UserSignUoTab {
+  padding-top: 20px;
+}
+
+.row {
+  margin-bottom: 1rem;
+}
+
+.colFirst {
+  padding-right: 0%;
+}
+
+.colLast {
+  padding-left: 0%;
+}
+
+.outer_signup {
+  display: flex;
+  margin-top: 50px;
+  justify-content: center;
+  flex-direction: column;
+  text-align: left;
+}
+
+.outer {
+  display: flex;
+  margin-top: 100px;
+  justify-content: center;
+  flex-direction: column;
+  text-align: left;
+}
+
+.tabsColor {
+  color: black;
+}
