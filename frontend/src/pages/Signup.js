@@ -207,7 +207,7 @@ class Signup extends Component {
                                                     <i className="fas fa-user fa-lg" style={{ width: 20 }}></i>
                                                 </div>
                                             </div>
-                                            <input type="text" className="form-control" value={this.state.cafename} onChange={this.handleChange} placeholder="Cafe Name" />
+                                            <input type="text" className="form-control" name="cafename" cafename={this.state.cafename} onChange={this.handleChange} placeholder="Cafe Name" />
                                         </div>
                                         {this.state.errcafename ? <small className="text text-danger">{this.state.errcafenameText}</small> : null}
 
@@ -217,7 +217,7 @@ class Signup extends Component {
                                                     <i className="fas fa-user fa-lg" style={{ width: 20 }}></i>
                                                 </div>
                                             </div>
-                                            <input type="text" className="form-control" value={this.state.cafe_username} onChange={this.handleChange} placeholder="Username" />
+                                            <input type="text" className="form-control" name="cafe_username" cafe_username={this.state.cafe_username} onChange={this.handleChange} placeholder="Username" />
                                         </div>
                                         {this.state.errcafe_username ? <small className="text text-danger">{this.state.errcafe_usernameText}</small> : null}
 
@@ -227,7 +227,7 @@ class Signup extends Component {
                                                     <i className="fas fa-mobile-alt fa-lg" style={{ width: 20 }}></i>
                                                 </div>
                                             </div>
-                                            <input type="text" className="form-control" value={this.state.cafe_phonenumber} onChange={this.handleChange} placeholder="Phone Number" />
+                                            <input type="text" className="form-control" name="cafe_phonenumber" cafe_phonenumber={this.state.cafe_phonenumber} onChange={this.handleChange} placeholder="Phone Number" />
                                         </div>
                                         {this.state.errcafe_phonenumber ? <small className="text text-danger">{this.state.errcafe_phonenumberText}</small> : null}
 
@@ -237,7 +237,7 @@ class Signup extends Component {
                                                     <i className="fas fa-at fa-lg" style={{ width: 20 }}></i>
                                                 </div>
                                             </div>
-                                            <input type="text" className="form-control" value={this.state.cafe_email} onChange={this.handleChange} placeholder="Email" />
+                                            <input type="text" className="form-control" name="cafe_email" cafe_email={this.state.cafe_email} onChange={this.handleChange} placeholder="Email" />
                                         </div>
                                         {this.state.errcafe_email ? <small className="text text-danger">{this.state.errcafe_emailText}</small> : null}
 
@@ -247,17 +247,17 @@ class Signup extends Component {
                                                     <i className="fas fa-lock fa-lg" style={{ width: 20 }}></i>
                                                 </div>
                                             </div>
-                                            <input type="text" className="form-control" value={this.state.cafe_password} onChange={this.handleChange} placeholder="Password" />
+                                            <input type="text" className="form-control" name="cafe_password" cafe_password={this.state.cafe_password} onChange={this.handleChange} placeholder="Password" />
                                         </div>
                                         {this.state.errcafe_password ? <small className="text text-danger">{this.state.errcafe_passwordText}</small> : null}
 
-                                        <div className="input-group mb-2">
+                                        <div className="input-group mb-3">
                                             <div className="input-group-prepend">
                                                 <div className="input-group-text">
                                                     <i className="fas fa-lock fa-lg" style={{ width: 20 }}></i>
                                                 </div>
                                             </div>
-                                            <input type="text" className="form-control" value={this.state.cafe_confirmpassword} onChange={this.handleChange} placeholder="Confirm Password" />
+                                            <input type="text" className="form-control" name="cafe_confirmpassword" cafe_confirmpassword={this.state.cafe_confirmpassword} onChange={this.handleChange} placeholder="Confirm Password" />
                                         </div>
                                         <button className="btn btn-primary rounded-pill font-weight-bold w-100 mb-3" onClick={this.cafeClick.bind(this)}>Sign Up</button>
                                         <a href="/sign-in" className="btn btn-outline-primary rounded-pill font-weight-bold w-100">Already registered?</a>
@@ -273,8 +273,8 @@ class Signup extends Component {
                                                     <i className="fas fa-user fa-lg" style={{ width: 20 }}></i>
                                                 </div>
                                             </div>
-                                            <input className="form-control" type="text" value={this.state.firstname} onChange={this.handleChange} autoComplete="off" placeholder="First name" />
-                                            <input className="form-control" type="text" value={this.state.lastname} onChange={this.handleChange} autoComplete="off" placeholder="Last name" />
+                                            <input className="form-control" type="text" name="firstname" firstname={this.state.firstname} onChange={this.handleChange} autoComplete="off" placeholder="First name" />
+                                            <input className="form-control" type="text" name="lastname" lastname={this.state.lastname} onChange={this.handleChange} autoComplete="off" placeholder="Last name" />
                                         </div>
 
                                         <div className="input-group mb-2">
@@ -283,7 +283,7 @@ class Signup extends Component {
                                                     <i className="fas fa-user fa-lg" style={{ width: 20 }}></i>
                                                 </div>
                                             </div>
-                                            <input type="text" className="form-control" value={this.state.username} onChange={this.handleChange} placeholder="Username" />
+                                            <input type="text" className="form-control" name="username" username={this.state.username} onChange={this.handleChange} placeholder="Username" />
                                         </div>
                                         {this.state.errusername ? <small className="text-danger">{this.state.errusernameText}</small> : null}
 
@@ -293,7 +293,7 @@ class Signup extends Component {
                                                     <i class="fas fa-mobile-alt fa-lg" style={{ width: 20 }}></i>
                                                 </div>
                                             </div>
-                                            <input type="text" className="form-control" value={this.state.phonenumber} onChange={this.handleChange} placeholder="Phone Number" />
+                                            <input type="text" className="form-control" name="phonenumber" phonenumber={this.state.phonenumber} onChange={this.handleChange} placeholder="Phone Number" />
                                         </div>
                                         {this.state.errphonenumber ? <small className="text text-danger">{this.state.errphonenumberText}</small> : null}
 
@@ -303,7 +303,7 @@ class Signup extends Component {
                                                     <i className="fas fa-at fa-lg" style={{ width: 20 }}></i>
                                                 </div>
                                             </div>
-                                            <input type="text" className="form-control" value={this.state.email} onChange={this.handleChange} placeholder="Email" />
+                                            <input type="text" className="form-control" name="email" email={this.state.email} onChange={this.handleChange} placeholder="Email" />
                                         </div>
                                         {this.state.erremail ? <small className="text text-danger">{this.state.erremailText}</small> : null}
 
@@ -313,17 +313,17 @@ class Signup extends Component {
                                                     <i className="fas fa-lock fa-lg" style={{ width: 20 }}></i>
                                                 </div>
                                             </div>
-                                            <input type="password" className="form-control" value={this.state.password} onChange={this.handleChange} placeholder="Password" />
+                                            <input type="password" className="form-control" name="password" password={this.state.password} onChange={this.handleChange} placeholder="Password" />
                                         </div>
                                         {this.state.errpassword ? <small className="text text-danger">{this.state.errpasswordText}</small> : null}
 
-                                        <div className="input-group mb-2">
+                                        <div className="input-group mb-3">
                                             <div className="input-group-prepend">
                                                 <div className="input-group-text">
                                                     <i className="fas fa-lock fa-lg" style={{ width: 20 }}></i>
                                                 </div>
                                             </div>
-                                            <input type="password" className="form-control" value={this.state.confirmpassword} onChange={this.handleChange} placeholder="Confirm Password" />
+                                            <input type="password" className="form-control" name="confirmpassword" confirmpassword={this.state.confirmpassword} onChange={this.handleChange} placeholder="Confirm Password" />
                                         </div>
 
                                         <button className="btn btn-primary rounded-pill font-weight-bold w-100 mb-3" onClick={this.userClick.bind(this)}>Sign Up</button>
