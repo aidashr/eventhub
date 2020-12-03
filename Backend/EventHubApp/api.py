@@ -46,7 +46,7 @@ class EventAPI(generics.GenericAPIView):
 class RegisterAPI(generics.GenericAPIView):
 
     def post(self, request, *args, **kwargs):
-        if request.data.get('RegularUser'):
+        if request.data.get('is_regular'):
             serializer = UserRegisterSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             user = serializer.save()

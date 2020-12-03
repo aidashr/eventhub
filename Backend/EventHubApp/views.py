@@ -106,6 +106,7 @@ def profile_view(request, **kwargs):
     elif request.method == 'PUT':
         try:
             new_data = request.data
+
             new_data.update({'id': kwargs.get('id')})
             user = User.objects.get(id=kwargs.get('id'))
             if user.is_regular:
