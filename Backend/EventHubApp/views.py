@@ -13,17 +13,16 @@ from .permissions import IsOwner
 from .models import User, Event, Participation
 
 
-# class ParticipanatsAPI(generics.GenericAPIView):
-#     queryset = Participation.objects.all()
-#     serializer_class = ParticipateSerializer
-#
-#     def get(self, request, **kwargs):
-#         print('-')
-#         post = Participation.objects.filter(event_id=kwargs.get('id'))
-#         print(post)
-#         like_count = post.user.count()
-#         serializer = ParticipateSerializer(like_count, many=True)
-#         return Response(serializer.data)
+class ParticipantsAPI(generics.GenericAPIView):
+    queryset = Participation.objects.all()
+    serializer_class = ParticipateSerializer
+
+    def get(self, request, **kwargs):
+        print('-')
+        post = Participation.objects.filter(event_id=kwargs.get('id'))
+        print(post)
+        serializer = ParticipateSerializer(post, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ParticipateAPI(generics.GenericAPIView):
@@ -32,7 +31,7 @@ class ParticipateAPI(generics.GenericAPIView):
 
     def post(self, request, **kwargs):
         new_data = {'event': request.data.get('event'),
-                    'user': {kwargs.get('id')}
+                    'user': kwargs.get('id')
                     }
 
         serializer = ParticipateSerializer(data=new_data)

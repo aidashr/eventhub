@@ -22,5 +22,5 @@ class Event(models.Model):
 
 
 class Participation(models.Model):
-    user = models.ManyToManyField(User)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     event = models.ForeignKey(Event, on_delete=models.CASCADE, null=True)
