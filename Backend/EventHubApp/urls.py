@@ -16,7 +16,7 @@ urlpatterns = [
     path('cafe/lastest', views.get_cafes),
     path('event/lastest', views.get_events),
     path('event/<int:id>', EventAPI.as_view()),
-    # path('event/<int:id>/participants',  views.ParticipanatsAPI.as_view()),
+    path('event/<int:id>/participants',  views.ParticipantsAPI.as_view()),
     path('event/search', views.SearchEvent.as_view()),
     path('cafe/search', views.SearchCafe.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
