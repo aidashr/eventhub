@@ -7,10 +7,61 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.pagination import PageNumberPagination
 from datetime import datetime
 
-from .serializers import UserSerializer, CafeSerializer, UpdateRegularUserSerializer, UpdateCafeSerializer,\
-    ChangePasswordSerializer, EventSerializer, ParticipateSerializer
+from .serializers import UserSerializer, CafeSerializer, UpdateRegularUserSerializer, UpdateCafeSerializer, \
+    ChangePasswordSerializer, EventSerializer, ParticipateSerializer, CafeFollowSerializer
 from .permissions import IsOwner
-from .models import User, Event, Participation
+from .models import User, Event, Participation, CafeFollow
+
+
+class GetFollowingsAPI(generics.GenericAPIView):
+    def get(self, request, **kwargs):
+        try:
+            user = User.objects.get(id=kwargs.get('id'))
+            print(user)
+            followings = CafeFollow.objects.filter(follower=user)
+            print(followings)
+            ser = CafeFollowSerializer(followings, many=True)
+            print(ser.data)
+            return Response(ser.data, status=status.HTTP_200_OK)
+
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class GetFollowersAPI(generics.GenericAPIView):
+    def get(self, request, **kwargs):
+        try:
+            user = User.objects.get(id=kwargs.get('id'))
+            print(user)
+            followers = CafeFollow.objects.filter(followed=user)
+            print(followers)
+            ser = CafeFollowSerializer(followers, many=True)
+            print(ser.data)
+            return Response(ser.data, status=status.HTTP_200_OK)
+
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class CafeFollowAPI(generics.GenericAPIView):
+    def post(self, request, **kwargs):
+        new_data = {'is_regular': kwargs.get('id'),
+                    'cafe': kwargs.get('cafe')
+                    }
+        serializer = CafeFollowSerializer(data=new_data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, **kwargs):
+        try:
+            CafeFollow.objects.filter(follower=kwargs.get('id'), followed=kwargs.get('cafe')).delete()
+            return Response(status=status.HTTP_200_OK)
+
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 class ParticipantsAPI(generics.GenericAPIView):
