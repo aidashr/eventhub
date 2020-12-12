@@ -24,3 +24,8 @@ class Event(models.Model):
 class Participation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     event = models.ForeignKey(Event, on_delete=models.CASCADE, null=True)
+
+
+class CafeFollow(models.Model):
+    follower = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='regular_user')
+    followed = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='cafe')

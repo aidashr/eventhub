@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Event, Participation
+from .models import User, Event, Participation, CafeFollow
 from django.contrib.auth import authenticate
 
 
@@ -108,3 +108,15 @@ class ParticipateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Participation
         fields = '__all__'
+
+
+class CafeFollowSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CafeFollow
+        fields = '__all__'
+
+    def create(self, validated_data):
+        user = User.objects.get(id=self.initial_data.get('is_regular'))
+        cafe = User.objects.get(id=self.initial_data.get('cafe'))
+        cafe_following = CafeFollow.objects.create(**validated_data, follower=user, followed=cafe)
+        return cafe_following
