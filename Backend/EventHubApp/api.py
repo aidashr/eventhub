@@ -1,8 +1,8 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from knox.models import AuthToken
-from .serializers import UserSerializer, UserRegisterSerializer, CafeRegisterSerializer, CafeSerializer, LoginSerializer, \
-    EventSerializer
+from .serializers import UserSerializer, UserRegisterSerializer, CafeRegisterSerializer, CafeSerializer, \
+    LoginSerializer, EventSerializer
 
 from .models import Event
 
@@ -11,19 +11,20 @@ class EventAPI(generics.GenericAPIView):
     serializer_class = EventSerializer
 
     def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        serializer = EventSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.save()
+        event = serializer.save()
         return Response({
-            "event": serializer.data
+            "event": EventSerializer(event, context=self.get_serializer_context()).data
         })
 
     def put(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        serializer = EventSerializer(data=request.data)
+        event = Event.objects.get(id=kwargs.get('id'))
         serializer.is_valid(raise_exception=True)
-        user = serializer.save()
+        updated_event = serializer.update(instance=event, validated_data=request.data)
         return Response({
-            "event": EventSerializer(user, context=self.get_serializer_context()).data
+            "event": EventSerializer(updated_event, context=self.get_serializer_context()).data
         })
 
     def get(self, request, *args, **kwargs):
