@@ -155,22 +155,22 @@ def profile_view(request, **kwargs):
 
     elif request.method == 'PUT':
         try:
-            new_data = request.data
-
-            new_data.update({'id': kwargs.get('id')})
+            request.data.update({'id': kwargs.get('id')})
             user = User.objects.get(id=kwargs.get('id'))
+            request.data.update({'username': user.username})
+
             if user.is_regular:
-                ser = UpdateRegularUserSerializer(user, data=new_data)
+                ser = UpdateRegularUserSerializer(user, data=request.data)
 
             else:
                 ser = UpdateCafeSerializer(user, data=request.data)
 
             if ser.is_valid():
-                ser.save()
+                ser.update(instance=user, validated_data=request.data)
                 return Response(ser.data, status=status.HTTP_200_OK)
 
             else:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
+                return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
 
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
