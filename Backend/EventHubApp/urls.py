@@ -14,6 +14,7 @@ urlpatterns = [
     path('users/<int:id>/change-password', views.ChangePasswordView.as_view(), name='password-update'),
     path('users/<int:id>/follow/<int:cafe>', views.CafeFollowAPI.as_view()),
     path('users/<int:id>/followers', views.GetFollowersAPI.as_view()),
+    path('users/<int:id>/followers/<int:follower>', views.RemoveFollowerAPI.as_view()),
     path('users/<int:id>/followings', views.GetFollowingsAPI.as_view()),
     path('cafe/lastest', views.get_cafes),
     path('event/lastest', views.get_events),
