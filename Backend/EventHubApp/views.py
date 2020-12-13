@@ -13,6 +13,16 @@ from .permissions import IsOwner
 from .models import User, Event, Participation, CafeFollow
 
 
+class RemoveFollowerAPI(generics.GenericAPIView):
+    def delete(self, request, **kwargs):
+        try:
+            CafeFollow.objects.filter(id=kwargs.get('follower')).delete()
+            return Response(status=status.HTTP_200_OK)
+
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
 class GetFollowingsAPI(generics.GenericAPIView):
     def get(self, request, **kwargs):
         try:
