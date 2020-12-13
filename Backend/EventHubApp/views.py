@@ -27,11 +27,8 @@ class GetFollowingsAPI(generics.GenericAPIView):
     def get(self, request, **kwargs):
         try:
             user = User.objects.get(id=kwargs.get('id'))
-            print(user)
             followings = CafeFollow.objects.filter(follower=user)
-            print(followings)
             ser = CafeFollowSerializer(followings, many=True)
-            print(ser.data)
             return Response(ser.data, status=status.HTTP_200_OK)
 
         except:
@@ -42,11 +39,8 @@ class GetFollowersAPI(generics.GenericAPIView):
     def get(self, request, **kwargs):
         try:
             user = User.objects.get(id=kwargs.get('id'))
-            print(user)
             followers = CafeFollow.objects.filter(followed=user)
-            print(followers)
             ser = CafeFollowSerializer(followers, many=True)
-            print(ser.data)
             return Response(ser.data, status=status.HTTP_200_OK)
 
         except:
@@ -56,7 +50,7 @@ class GetFollowersAPI(generics.GenericAPIView):
 class CafeFollowAPI(generics.GenericAPIView):
     def post(self, request, **kwargs):
         new_data = {'is_regular': kwargs.get('id'),
-                    'cafe': kwargs.get('cafe')
+                    'cafe': request.data.get('cafe')
                     }
         serializer = CafeFollowSerializer(data=new_data)
         if serializer.is_valid():
