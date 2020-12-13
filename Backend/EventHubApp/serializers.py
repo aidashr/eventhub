@@ -113,6 +113,14 @@ class UpdateEventSerializer(serializers.ModelSerializer):
 
 
 class ParticipateSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+
+    class Meta:
+        model = Participation
+        fields = '__all__'
+
+
+class PostParticipateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Participation
         fields = '__all__'

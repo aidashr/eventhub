@@ -8,7 +8,7 @@ from rest_framework.pagination import PageNumberPagination
 from datetime import datetime
 
 from .serializers import UserSerializer, CafeSerializer, UpdateRegularUserSerializer, UpdateCafeSerializer, \
-    ChangePasswordSerializer, EventSerializer, ParticipateSerializer, CafeFollowSerializer
+    ChangePasswordSerializer, EventSerializer, ParticipateSerializer, CafeFollowSerializer, PostParticipateSerializer
 from .permissions import IsOwner
 from .models import User, Event, Participation, CafeFollow
 
@@ -69,29 +69,30 @@ class ParticipantsAPI(generics.GenericAPIView):
     serializer_class = ParticipateSerializer
 
     def get(self, request, **kwargs):
-        print('-')
         post = Participation.objects.filter(event_id=kwargs.get('id'))
-        print(post)
         serializer = ParticipateSerializer(post, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
-class ParticipateAPI(generics.GenericAPIView):
-    queryset = Participation.objects.all()
-    serializer_class = ParticipateSerializer
-
     def post(self, request, **kwargs):
-        new_data = {'event': request.data.get('event'),
-                    'user': kwargs.get('id')
+        new_data = {'event': kwargs.get('id'),
+                    'user': request.data.get('user')
                     }
 
-        serializer = ParticipateSerializer(data=new_data)
+        serializer = PostParticipateSerializer(data=new_data)
 
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            par = serializer.save()
+            return Response(ParticipateSerializer(par).data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, **kwargs):
+        try:
+            Participation.objects.filter(id=kwargs.get('participation_id')).delete()
+            return Response(status=status.HTTP_200_OK)
+
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['GET', ])
