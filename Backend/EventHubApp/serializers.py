@@ -58,7 +58,7 @@ class UpdateRegularUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'first_name', 'last_name',
-                  'phone_number', 'is_regular', 'profile_image', 'cafe_address', 'is_private')
+                  'phone_number', 'is_regular', 'profile_image', 'is_private')
 
     def update(self, instance, validated_data):
         obj = super().update(instance, validated_data)
@@ -87,6 +87,14 @@ class ChangePasswordSerializer(serializers.Serializer):
 
 
 class EventSerializer(serializers.ModelSerializer):
+    user = CafeSerializer()
+
+    class Meta:
+        model = Event
+        fields = '__all__'
+
+
+class UpdateEventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = '__all__'
