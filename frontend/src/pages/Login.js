@@ -36,34 +36,29 @@ class Login extends Component {
     axios.get('http://127.0.0.1:8000/users/login',
       { params: { username: this.state.username, password: this.state.password } })
       .then((res) => {
-        console.log('Login Token : ' + res.data.token) //LOG
-        console.log('username : ' + res.data.user.username); //LOG
-        console.log('password : ' + res.data.user.password); //LOG
-        console.log('Id : ' + res.data.user.id) //LOG
-        console.log('is_regular : ' + res.data.user.is_regular) //LOG
-        this.state.is_regular = res.data.user.is_regular;
+        console.log('Login Token : ' + res.data) //LOG
+        this.setState({ is_regular: res.data.user.is_regular })
         if (res.status === 200) {
           this.setState({ isLogedIn: true });
           console.log(this.state) //LOG
 
           cookies.set('TOKEN', res.data.token);
-          console.log(cookies.get('TOKEN'));//LOG
 
           cookies.set('ID', res.data.user.id);
-          console.log(cookies.get('ID'));//LOG
 
           cookies.set('Is_Regular', res.data.user.is_regular);
-          console.log(cookies.get('Is_Regular'));//LOG
         }
       }).catch((error) => {
         if (error.response) {
           this.setState({ isLogedIn: false });
-          this.state.errusername = (error.response.data.username != undefined) ? true : false;
-          this.state.errpassword = (error.response.data.password != undefined) ? true : false;
 
-          this.state.errusernameText = error.response.data.username;
-          this.state.errpasswordText = error.response.data.password;
-          this.state.er = error.response.data.non_field_errors;
+          this.setState({ errusername: (error.response.data.username !== undefined) ? true : false })
+          this.setState({ errpassword: (error.response.data.password !== undefined) ? true : false })
+
+          this.setState({ errusernameText: error.response.data.username })
+          this.setState({ errpasswordText: error.response.data.password })
+          this.setState({ er: error.response.data.non_field_errors })
+
         }
       });
   }
@@ -84,26 +79,34 @@ class Login extends Component {
               <h5 className="text text-center font-weight-bold mb-4">Login</h5>
 
               <small className="text text-danger">{this.state.er}</small>
+              <div className="input-group mb-2">
+                <div className="input-group">
+                  <div className="input-group-prepend">
+                    <div className="input-group-text">
+                      <i className="fas fa-user fa-lg" style={{ width: 20 }}></i>
+                    </div>
+                  </div>
+                  <input type="text" className="form-control" name="username" username={this.state.username} onChange={this.handleChange} placeholder="Username" />
+                </div>
+                <div>
+                  {this.state.errusername ? <small className="text text-danger">{this.state.errusernameText}</small> : null}
+                </div>
+              </div>
 
               <div className="input-group mb-2">
-                <div className="input-group-prepend">
-                  <div className="input-group-text">
-                    <i className="fas fa-user fa-lg" style={{ width: 20 }}></i>
+                <div className="input-group">
+                  <div className="input-group-prepend">
+                    <div className="input-group-text">
+                      <i className="fas fa-lock fa-lg" style={{ width: 20 }}></i>
+                    </div>
                   </div>
+                  <input type="password" className="form-control" name="password" password={this.state.password} onChange={this.handleChange} placeholder="Password" />
                 </div>
-                <input type="text" className="form-control" name="username" username={this.state.username} onChange={this.handleChange} placeholder="Username" />
+                <div>
+                  {this.state.errpassword ? <small className="text text-danger">{this.state.errpasswordText}</small> : null}
+                </div>
               </div>
-              {this.state.errusername ? <small className="text text-danger">{this.state.errusernameText}</small> : null}
 
-              <div className="input-group mb-2">
-                <div className="input-group-prepend">
-                  <div className="input-group-text">
-                    <i className="fas fa-lock fa-lg" style={{ width: 20 }}></i>
-                  </div>
-                </div>
-                <input type="text" className="form-control" name="password" password={this.state.password} onChange={this.handleChange} placeholder="Password" />
-              </div>
-              {this.state.errpassword ? <small className="text text-danger">{this.state.errpasswordText}</small> : null}
 
               <button className="btn btn-primary rounded-pill font-weight-bold w-100 mb-3" value="Submit" onClick={this.handleSubmit} onSubmit={this.handleSubmit}>Login</button>
               <a className="btn btn-outline-primary rounded-pill font-weight-bold w-100" href="/sign-up">Create an account</a>
