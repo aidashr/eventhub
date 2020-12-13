@@ -2,25 +2,31 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from knox.models import AuthToken
 from .serializers import UserSerializer, UserRegisterSerializer, CafeRegisterSerializer, CafeSerializer, \
-    LoginSerializer, EventSerializer
+    LoginSerializer, \
+    EventSerializer, UpdateEventSerializer
 
-from .models import Event
+from .models import Event, User
 
 
-class EventAPI(generics.GenericAPIView):
+class PostEventAPI(generics.GenericAPIView):
     serializer_class = EventSerializer
 
     def post(self, request, *args, **kwargs):
-        serializer = EventSerializer(data=request.data)
+        serializer = UpdateEventSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         event = serializer.save()
         return Response({
             "event": EventSerializer(event, context=self.get_serializer_context()).data
         })
 
+
+class EventAPI(generics.GenericAPIView):
+    serializer_class = EventSerializer
+
     def put(self, request, *args, **kwargs):
-        serializer = EventSerializer(data=request.data)
+        serializer = UpdateEventSerializer(data=request.data)
         event = Event.objects.get(id=kwargs.get('id'))
+        request.data.update({'user': User.objects.get(id=event.user.id)})
         serializer.is_valid(raise_exception=True)
         updated_event = serializer.update(instance=event, validated_data=request.data)
         return Response({
@@ -39,9 +45,8 @@ class EventAPI(generics.GenericAPIView):
         return Response(ser.data, status=status.HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
-        event = Event.objects.get(id=kwargs.get('id')).delete()
-        ser = EventSerializer(event)
-        return Response(ser.data, status=status.HTTP_200_OK)
+        Event.objects.get(id=kwargs.get('id')).delete()
+        return Response(status=status.HTTP_200_OK)
 
 
 class RegisterAPI(generics.GenericAPIView):
