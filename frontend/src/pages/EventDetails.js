@@ -33,6 +33,8 @@ class EventDetails extends Component {
             date: '',
             time: '',
 
+            mem_length: 0,
+
             modal: false
         };
 
@@ -81,21 +83,22 @@ class EventDetails extends Component {
             }
         });
 
-        var url2 = url + '/participants';
+        var url2 = url + '/participate';
         axios.get(
             url2
         ).then((res) => {
             if (res.status === 200) {
                 post = res.data || []
+                this.setState({ mem_length: res.data.length })
 
                 listItems = post.map((post) =>
-                    <ListGroup.Item className='Mem-card' >
-                        <Avatar className="Mem-avatar" name='A B' size="70" round={true} />
+                    <ListGroup.Item className='Mem-card' key={post.id}>
+                        <Avatar className="Mem-avatar" name={post.user.first_name + ' ' + post.user.last_name} size="70" round={true} />
                         <div>
-                            <text className="Mem-user">{post.id}</text>
+                            <span className="Mem-user">{post.user.username}</span>
                         </div>
                         <div>
-                            <text className="Mem-name">{post.event} {post.user} </text>
+                            <span className="Mem-name">{post.user.first_name} {post.user.last_name} </span>
                         </div>
                     </ListGroup.Item >
                 );
@@ -141,11 +144,11 @@ class EventDetails extends Component {
                     </div>
                     <Card.Body>
                         <div className="Avatars" onClick={this.handleShow.bind(this)}>
-                            <text>Members : </text>
+                            <span>Members : </span>
                             <Avatar name='A A' size="40" round={true} />
                             <Avatar className="Avatar1" name='A B' size="40" round={true} />
                             <Avatar className="Avatar2" name='A C' size="40" round={true} />
-                            <text >+n more </text>
+                            <span >{this.state.mem_length} more </span>
                         </div>
                         <Button className='Join-btn' variant="primary">Join</Button>
                     </Card.Body>
@@ -168,10 +171,10 @@ class EventDetails extends Component {
                             <ListGroup.Item className='Mem-card'>
                                 <Avatar className="Mem-avatar" name='A B' size="70" round={true} />
                                 <div>
-                                    <text className="Mem-user">A B </text>
+                                    <span className="Mem-user">A B </span>
                                 </div>
                                 <div>
-                                    <text className="Mem-name">Fname Lname </text>
+                                    <span className="Mem-name">Fname Lname </span>
                                 </div>
                             </ListGroup.Item>
                             {listItems}
