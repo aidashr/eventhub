@@ -34,7 +34,7 @@ class EventAPI(generics.GenericAPIView):
 
     def put(self, request, *args, **kwargs):
         serializer = UpdateEventSerializer(data=request.data)
-        event = Event.objects.get(id=kwargs.get('id'))
+        event = Event.objects.get(id=kwargs.get('event_id'))
         request.data.update({'user': User.objects.get(id=event.user.id)})
         serializer.is_valid(raise_exception=True)
         updated_event = serializer.update(instance=event, validated_data=request.data)
@@ -44,7 +44,7 @@ class EventAPI(generics.GenericAPIView):
 
     def get(self, request, *args, **kwargs):
         try:
-            event = Event.objects.get(id=kwargs.get('id'))
+            event = Event.objects.get(id=kwargs.get('event_id'))
 
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -54,7 +54,7 @@ class EventAPI(generics.GenericAPIView):
         return Response(ser.data, status=status.HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
-        Event.objects.get(id=kwargs.get('id')).delete()
+        Event.objects.get(id=kwargs.get('event_id')).delete()
         return Response(status=status.HTTP_200_OK)
 
 

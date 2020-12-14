@@ -77,14 +77,17 @@ class CafeFollowAPI(generics.GenericAPIView):
 class ParticipantsAPI(generics.GenericAPIView):
     queryset = Participation.objects.all()
     serializer_class = ParticipateSerializer
+    permission_classes = [Or(And(IsGetRequest, AllowAny),
+                             And(IsPostRequest, IsOwner),
+                             And(IsDeleteRequest, IsOwner))]
 
     def get(self, request, **kwargs):
-        post = Participation.objects.filter(event_id=kwargs.get('id'))
+        post = Participation.objects.filter(event_id=kwargs.get('event_id'))
         serializer = ParticipateSerializer(post, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, **kwargs):
-        new_data = {'event': kwargs.get('id'),
+        new_data = {'event': kwargs.get('event_id'),
                     'user': request.data.get('user')
                     }
 
@@ -109,11 +112,11 @@ class ParticipantsAPI(generics.GenericAPIView):
 
     def delete(self, request, **kwargs):
         try:
-            if Participation.objects.get(id=kwargs.get('participation_id')).event.id != kwargs.get('id'):
+            if Participation.objects.get(id=kwargs.get('participation_id')).event.id != kwargs.get('event_id'):
                 return Response(status=status.HTTP_400_BAD_REQUEST)
 
             Participation.objects.filter(id=kwargs.get('participation_id')).delete()
-            event = Event.objects.get(id=kwargs.get('id'))
+            event = Event.objects.get(id=kwargs.get('event_id'))
 
             data = {"participants_count": event.participants_count - 1}
 
@@ -129,6 +132,7 @@ class ParticipantsAPI(generics.GenericAPIView):
 
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
 
 
 @api_view(['GET', ])
