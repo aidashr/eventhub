@@ -17,7 +17,6 @@ class PostEventAPI(generics.GenericAPIView):
     serializer_class = EventSerializer
     permission_classes = (IsAuthenticated, IsOwner)
 
-    @permission_classes((IsOwner, IsAuthenticated))
     def post(self, request, *args, **kwargs):
         serializer = UpdateEventSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -33,7 +32,6 @@ class EventAPI(generics.GenericAPIView):
                              And(IsPutRequest, IsOwner),
                              And(IsDeleteRequest, IsOwner))]
 
-    @permission_classes((IsOwner, IsAuthenticated))
     def put(self, request, *args, **kwargs):
         serializer = UpdateEventSerializer(data=request.data)
         event = Event.objects.get(id=kwargs.get('id'))
@@ -55,7 +53,6 @@ class EventAPI(generics.GenericAPIView):
 
         return Response(ser.data, status=status.HTTP_200_OK)
 
-    @permission_classes((IsOwner, IsAuthenticated))
     def delete(self, request, *args, **kwargs):
         Event.objects.get(id=kwargs.get('id')).delete()
         return Response(status=status.HTTP_200_OK)
