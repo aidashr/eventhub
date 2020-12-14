@@ -29,7 +29,7 @@ class IsOwner(permissions.BasePermission):
 
     def check_event_owner(self, request, view):
         try:
-            event = Event.objects.get(id=view.kwargs.get('id'))
+            event = Event.objects.get(id=view.kwargs.get('event_id'))
             user = event.user
         except:
             return False
