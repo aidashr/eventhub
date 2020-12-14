@@ -1,3 +1,4 @@
+from rest_condition import And, Or, Not
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status, generics
@@ -11,10 +12,12 @@ from .serializers import UserSerializer, CafeSerializer, UpdateRegularUserSerial
     ChangePasswordSerializer, EventSerializer, ParticipateSerializer, CafeFollowSerializer, PostParticipateSerializer
 from .permissions import IsOwner
 from .models import User, Event, Participation, CafeFollow
+from .permissions import IsOwner, IsPostRequest, IsPutRequest, IsDeleteRequest, IsGetRequest
 
 
 class RemoveFollowerAPI(generics.GenericAPIView):
-    @permission_classes((IsOwner, IsAuthenticated))
+    permission_classes = (IsAuthenticated, IsOwner)
+
     def delete(self, request, **kwargs):
         try:
             CafeFollow.objects.filter(id=kwargs.get('follower')).delete()
@@ -49,7 +52,8 @@ class GetFollowersAPI(generics.GenericAPIView):
 
 
 class CafeFollowAPI(generics.GenericAPIView):
-    @permission_classes((IsOwner, IsAuthenticated))
+    permission_classes = (IsAuthenticated, IsOwner)
+
     def post(self, request, **kwargs):
         new_data = {'is_regular': kwargs.get('id'),
                     'cafe': request.data.get('cafe')
@@ -145,6 +149,9 @@ def get_future_events(request, **kwargs):
 
 
 class UserProfile(generics.GenericAPIView):
+    permission_classes = [Or(And(IsGetRequest, AllowAny),
+                             And(IsPutRequest, IsOwner))]
+
     def get(self, request, **kwargs):
         try:
             user = User.objects.get(id=kwargs.get('id'))
@@ -160,7 +167,6 @@ class UserProfile(generics.GenericAPIView):
 
         return Response(ser.data, status=status.HTTP_200_OK)
 
-    @permission_classes((IsOwner, IsAuthenticated))
     def put(self, request, **kwargs):
         try:
             request.data.update({'id': kwargs.get('id')})

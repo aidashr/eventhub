@@ -1,18 +1,21 @@
+from rest_condition import And, Or, Not
 from rest_framework import generics, status
 from rest_framework.decorators import permission_classes
 from rest_framework.response import Response
 from knox.models import AuthToken
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from .serializers import UserSerializer, UserRegisterSerializer, CafeRegisterSerializer, CafeSerializer, \
     LoginSerializer, \
     EventSerializer, UpdateEventSerializer
 
 from .models import Event, User
 from .permissions import IsOwner
+from .permissions import IsOwner, IsPostRequest, IsPutRequest, IsDeleteRequest, IsGetRequest
 
 
 class PostEventAPI(generics.GenericAPIView):
     serializer_class = EventSerializer
+    permission_classes = (IsAuthenticated, IsOwner)
 
     @permission_classes((IsOwner, IsAuthenticated))
     def post(self, request, *args, **kwargs):
@@ -26,6 +29,9 @@ class PostEventAPI(generics.GenericAPIView):
 
 class EventAPI(generics.GenericAPIView):
     serializer_class = EventSerializer
+    permission_classes = [Or(And(IsGetRequest, AllowAny),
+                             And(IsPutRequest, IsOwner),
+                             And(IsDeleteRequest, IsOwner))]
 
     @permission_classes((IsOwner, IsAuthenticated))
     def put(self, request, *args, **kwargs):
