@@ -65,7 +65,6 @@ class CafeFollowAPI(generics.GenericAPIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @permission_classes((IsOwner, IsAuthenticated))
     def delete(self, request, **kwargs):
         try:
             CafeFollow.objects.filter(follower=kwargs.get('id'), followed=kwargs.get('cafe')).delete()
@@ -84,7 +83,6 @@ class ParticipantsAPI(generics.GenericAPIView):
         serializer = ParticipateSerializer(post, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @permission_classes((IsOwner, IsAuthenticated))
     def post(self, request, **kwargs):
         new_data = {'event': kwargs.get('id'),
                     'user': request.data.get('user')
@@ -98,7 +96,6 @@ class ParticipantsAPI(generics.GenericAPIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @permission_classes((IsOwner, IsAuthenticated))
     def delete(self, request, **kwargs):
         try:
             Participation.objects.filter(id=kwargs.get('participation_id')).delete()
