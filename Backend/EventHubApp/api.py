@@ -1,16 +1,20 @@
 from rest_framework import generics, status
+from rest_framework.decorators import permission_classes
 from rest_framework.response import Response
 from knox.models import AuthToken
+from rest_framework.permissions import IsAuthenticated
 from .serializers import UserSerializer, UserRegisterSerializer, CafeRegisterSerializer, CafeSerializer, \
     LoginSerializer, \
     EventSerializer, UpdateEventSerializer
 
 from .models import Event, User
+from .permissions import IsOwner
 
 
 class PostEventAPI(generics.GenericAPIView):
     serializer_class = EventSerializer
 
+    @permission_classes((IsOwner, IsAuthenticated))
     def post(self, request, *args, **kwargs):
         serializer = UpdateEventSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -23,6 +27,7 @@ class PostEventAPI(generics.GenericAPIView):
 class EventAPI(generics.GenericAPIView):
     serializer_class = EventSerializer
 
+    @permission_classes((IsOwner, IsAuthenticated))
     def put(self, request, *args, **kwargs):
         serializer = UpdateEventSerializer(data=request.data)
         event = Event.objects.get(id=kwargs.get('id'))
@@ -44,6 +49,7 @@ class EventAPI(generics.GenericAPIView):
 
         return Response(ser.data, status=status.HTTP_200_OK)
 
+    @permission_classes((IsOwner, IsAuthenticated))
     def delete(self, request, *args, **kwargs):
         Event.objects.get(id=kwargs.get('id')).delete()
         return Response(status=status.HTTP_200_OK)
