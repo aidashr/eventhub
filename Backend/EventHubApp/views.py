@@ -14,6 +14,7 @@ from .models import User, Event, Participation, CafeFollow
 
 
 class RemoveFollowerAPI(generics.GenericAPIView):
+    @permission_classes((IsOwner, IsAuthenticated))
     def delete(self, request, **kwargs):
         try:
             CafeFollow.objects.filter(id=kwargs.get('follower')).delete()
@@ -48,6 +49,7 @@ class GetFollowersAPI(generics.GenericAPIView):
 
 
 class CafeFollowAPI(generics.GenericAPIView):
+    @permission_classes((IsOwner, IsAuthenticated))
     def post(self, request, **kwargs):
         new_data = {'is_regular': kwargs.get('id'),
                     'cafe': request.data.get('cafe')
@@ -59,6 +61,7 @@ class CafeFollowAPI(generics.GenericAPIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @permission_classes((IsOwner, IsAuthenticated))
     def delete(self, request, **kwargs):
         try:
             CafeFollow.objects.filter(follower=kwargs.get('id'), followed=kwargs.get('cafe')).delete()
@@ -77,6 +80,7 @@ class ParticipantsAPI(generics.GenericAPIView):
         serializer = ParticipateSerializer(post, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @permission_classes((IsOwner, IsAuthenticated))
     def post(self, request, **kwargs):
         new_data = {'event': kwargs.get('id'),
                     'user': request.data.get('user')
@@ -90,6 +94,7 @@ class ParticipantsAPI(generics.GenericAPIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @permission_classes((IsOwner, IsAuthenticated))
     def delete(self, request, **kwargs):
         try:
             Participation.objects.filter(id=kwargs.get('participation_id')).delete()
@@ -139,11 +144,8 @@ def get_future_events(request, **kwargs):
     return Response(new_event, status=status.HTTP_200_OK)
 
 
-@api_view(['GET', 'PUT'])
-@permission_classes((IsAuthenticated, ))
-# @permission_classes((IsOwner, IsAuthenticated))
-def profile_view(request, **kwargs):
-    if request.method == 'GET':
+class UserProfile(generics.GenericAPIView):
+    def get(self, request, **kwargs):
         try:
             user = User.objects.get(id=kwargs.get('id'))
 
@@ -158,7 +160,8 @@ def profile_view(request, **kwargs):
 
         return Response(ser.data, status=status.HTTP_200_OK)
 
-    elif request.method == 'PUT':
+    @permission_classes((IsOwner, IsAuthenticated))
+    def put(self, request, **kwargs):
         try:
             request.data.update({'id': kwargs.get('id')})
             user = User.objects.get(id=kwargs.get('id'))
@@ -220,7 +223,7 @@ def get_events(request):
 class ChangePasswordView(generics.UpdateAPIView):
     serializer_class = ChangePasswordSerializer
     model = User
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, IsOwner)
 
     def get_object(self, queryset=None):
         self.request.data.update({'id': self.kwargs.get('id')})
