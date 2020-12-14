@@ -16,6 +16,8 @@ class Event(models.Model):
     title = models.CharField(null=True, max_length=50)
     description = models.CharField(null=True, max_length=450)
     created_at = models.DateTimeField(auto_now=True, auto_now_add=False)
+    capacity = models.IntegerField(null=True, default=10)
+    participants_count = models.IntegerField(null=True, default=0)
     image = models.ImageField(blank=True, null=True)
     start_time = models.DateTimeField(null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)

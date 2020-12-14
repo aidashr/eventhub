@@ -90,15 +90,41 @@ class ParticipantsAPI(generics.GenericAPIView):
 
         serializer = PostParticipateSerializer(data=new_data)
 
+        event = Event.objects.get(id=new_data.get('event'))
+
+        if event.capacity <= event.participants_count:
+            return Response({"error": "Can't accept more participants"}, status=status.HTTP_400_BAD_REQUEST)
+
         if serializer.is_valid():
             par = serializer.save()
+            data = {"participants_count": event.participants_count + 1}
+            update_ser = PostParticipateSerializer(event, data=data, partial=True)
+
+            if update_ser.is_valid():
+                update_ser.update(instance=event, validated_data=data)
+
             return Response(ParticipateSerializer(par).data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, **kwargs):
         try:
+            if Participation.objects.get(id=kwargs.get('participation_id')).event.id != kwargs.get('id'):
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+
             Participation.objects.filter(id=kwargs.get('participation_id')).delete()
+            event = Event.objects.get(id=kwargs.get('id'))
+
+            data = {"participants_count": event.participants_count - 1}
+
+            if event.participants_count == 0:
+                data = {"participants_count": 0}
+
+            update_ser = PostParticipateSerializer(event, data=data, partial=True)
+
+            if update_ser.is_valid():
+                update_ser.update(instance=event, validated_data=data)
+
             return Response(status=status.HTTP_200_OK)
 
         except:
