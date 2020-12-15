@@ -15,6 +15,48 @@ from .models import User, Event, Participation, CafeFollow
 from .permissions import IsOwner, IsPostRequest, IsPutRequest, IsDeleteRequest, IsGetRequest
 
 
+class CafeEventsAPI(generics.GenericAPIView):
+    def get(self, request, **kwargs):
+        try:
+            if len(request.query_params) == 0:
+                try:
+                    events = Event.objects.filter(user=User.objects.get(id=kwargs.get("id")))
+                    ser = EventSerializer(events, many=True)
+                    return Response(ser.data, status=status.HTTP_200_OK)
+
+                except:
+                    return Response(status=status.HTTP_404_NOT_FOUND)
+
+            from_time = request.query_params.get("from")
+            from_time = datetime.strptime(from_time, '%Y-%m-%dT%H:%M:%S')
+
+            to_time = request.query_params.get("to")
+            to_time = datetime.strptime(to_time, '%Y-%m-%dT%H:%M:%S')
+
+            try:
+                events = Event.objects.filter(user_id=kwargs.get('id'))
+                event_ser = EventSerializer(events, many=True)
+            except:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+            new_event = event_ser.data
+
+            counter = 0
+            for i in range(len(new_event)):
+                event_time = str(new_event[i - counter].get('start_time')).split('+')[0]
+                event_time = datetime.strptime(event_time, '%Y-%m-%dT%H:%M:%S')
+
+                if not to_time >= event_time >= from_time:
+                    new_event.pop(i - counter)
+                    counter += 1
+
+            return Response(new_event, status=status.HTTP_200_OK)
+
+        except NameError:
+            print(NameError)
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 class RemoveFollowerAPI(generics.GenericAPIView):
     permission_classes = (IsAuthenticated, IsOwner)
 
