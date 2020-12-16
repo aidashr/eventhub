@@ -1,0 +1,22 @@
+.Cafe-Search {
+  margin-left: 8rem;
+  margin-right: 8rem;
+  padding: 3rem;
+  background-color: rgb(240, 240, 240);
+  overflow: auto;
+}
+
+.Search-Body {
+  columns: 2 auto;
+}
+
+.Search-Tabs {
+}
+
+.nav-tabs .nav-item {
+  margin-bottom: 15px;
+}
+
+.nav-tabs {
+  border-bottom: 1px solid #dee2e6;
+}
