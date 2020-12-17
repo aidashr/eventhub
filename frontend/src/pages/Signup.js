@@ -166,9 +166,9 @@ class Signup extends Component {
     render() {
         if (this.state.isSignedUp) {
             if (this.state.is_regular)
-                return <Redirect to={{ pathname: "/user-profile" }} />;
+                return <Redirect to={{ pathname: "/user-profile/" + Cookies.get('ID') }} />;
             if (!this.state.is_regular)
-                return <Redirect to={{ pathname: "/user-profile" }} />;
+                return <Redirect to={{ pathname: "/cafe-profile" + Cookies.get('ID') }} />;
         }
         return (
             <div className="container-md">
