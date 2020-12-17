@@ -1,11 +1,7 @@
 import { Component } from 'react';
 import { Redirect } from 'react-router';
 import axios from "axios";
-import Cookies from 'universal-cookie';
-
-
-const cookies = new Cookies();
-
+import Cookies from 'js-cookie'
 
 class Login extends Component {
   constructor(props) {
@@ -17,7 +13,7 @@ class Login extends Component {
       errusername: false,
       errpassword: false,
 
-      is_regular: false,
+      is_regular: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -32,7 +28,6 @@ class Login extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    //'http://127.0.0.1:8000/users/login?username=matin&password=1234'
     axios.get('http://127.0.0.1:8000/users/login',
       { params: { username: this.state.username, password: this.state.password } })
       .then((res) => {
@@ -40,13 +35,10 @@ class Login extends Component {
         this.setState({ is_regular: res.data.user.is_regular })
         if (res.status === 200) {
           this.setState({ isLogedIn: true });
-          console.log(this.state) //LOG
 
-          cookies.set('TOKEN', res.data.token);
-
-          cookies.set('ID', res.data.user.id);
-
-          cookies.set('Is_Regular', res.data.user.is_regular);
+          Cookies.set('TOKEN', res.data.token);
+          Cookies.set('ID', res.data.user.id);
+          Cookies.set('IS_REGULAR', res.data.user.is_regular);
         }
       }).catch((error) => {
         if (error.response) {
@@ -66,9 +58,9 @@ class Login extends Component {
   render() {
     if (this.state.isLogedIn) {
       if (this.state.is_regular)
-        return <Redirect to={{ pathname: "/user-profile" }} />;
+        return <Redirect to={{ pathname: "/user-profile/" + Cookies.get('ID') }} />;
       if (!this.state.is_regular)
-        return <Redirect to={{ pathname: "/user-profile" }} />;
+        return <Redirect to={{ pathname: "/cafe-profile/" + Cookies.get('ID') }} />;
     }
     return (
       <div className="container-md">

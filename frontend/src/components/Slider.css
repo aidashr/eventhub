@@ -4,25 +4,52 @@
   position: relative;
   padding: 16px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
-  background-color: darkkhaki;
+  background-color: #f1f1f1;
   border-radius: 8px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
+.slider-header {
+  height: fit-content;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.slider-header-title {
+  font-size: 24px;
+  font-weight: 500;
+  margin-left: 32px;
+}
+
+.slider-body {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
 .slider-items-container {
   width: 100%;
   height: fit-content;
-  overflow-x: scroll;
-  margin-left: 16px;
-  margin-right: 16px;
+  overflow-x: auto;
+  margin-left: 32px;
+  margin-right: 32px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  border-radius: 8px;
   display: flex;
   flex-direction: row;
 }
 
 .slider-right-arrow {
-  width: 32px;
-  height: 32px;
+  width: 48px;
+  height: 48px;
+  position: absolute;
+  top: 50%;
+  right: 24px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -32,9 +59,11 @@
 }
 
 .slider-left-arrow {
-  width: 32px;
-  height: 32px;
-  position: relative;
+  width: 48px;
+  height: 48px;
+  position: absolute;
+  top: 50%;
+  left: 24px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -49,15 +78,46 @@
 }
 
 .slider-item {
-  min-width: fit-content;
   height: fit-content;
+  margin-right: 16px;
+}
+
+.slider-items-alert {
+  width: 100%;
+  height: 100px;
   background-color: white;
-  margin-right: 8px;
+  align-self: center;
+  justify-self: center;
+  text-align: center;
 }
 
 ::-webkit-scrollbar {
   border-radius: 8px;
   width: 0px;
   height: 0px;
-  background: transparent; /* Optional: just make scrollbar invisible */
+  background: transparent;
+}
+
+@media only screen and (max-width: 576px) {
+  .slider-header-title {
+    margin-left: 0px;
+  }
+
+  .slider-items-container {
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+  }
+
+  .slider-right-arrow {
+    width: 32px;
+    height: 32px;
+    right: 0px;
+  }
+
+  .slider-left-arrow {
+    width: 32px;
+    height: 32px;
+    left: 0px;
+  }
 }

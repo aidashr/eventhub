@@ -1,2 +1,12 @@
 .nav-bar-background {
 }
+
+.nav-bar-search {
+  width: 50%;
+}
+
+@media only screen and (max-width: 576px) {
+  .nav-bar-search {
+    width: 100%;
+  }
+}
