@@ -1,9 +1,10 @@
 import { Component } from 'react';
+import './../App.css'
 
 class Navbar extends Component {
     render() {
         return (
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <nav class="navbar navbar-expand-md navbar-dark bg-dark">
                 <div className="container-md">
                     <a class="navbar-brand" href="/">Event Hub</a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

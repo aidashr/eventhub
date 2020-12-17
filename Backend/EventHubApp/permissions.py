@@ -2,6 +2,7 @@ from rest_framework import permissions
 from .models import User, Event
 
 
+
 class IsOwner(permissions.BasePermission):
     def has_permission(self, request, view, **kwargs):
         try:
