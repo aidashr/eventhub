@@ -52,7 +52,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES':
     ('knox.auth.TokenAuthentication',),
     'DEFAULT_PAGINATION_CLASSES': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
+    'PAGE_SIZE': 2,
     'DATETIME_FORMAT': "%Y-%m-%dT%H:%M:%S",
 }
 
