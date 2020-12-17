@@ -298,7 +298,7 @@ def get_events(request):
 class ChangePasswordView(generics.UpdateAPIView):
     serializer_class = ChangePasswordSerializer
     model = User
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, IsOwner)
 
     def get_object(self, queryset=None):
         self.request.data.update({'id': self.kwargs.get('id')})
