@@ -1,9 +1,7 @@
 import { Component } from 'react';
 import axios from "axios";
-import Cookies from 'universal-cookie';
-
-const cookies = new Cookies();
-
+import { Redirect } from 'react-router';
+import Cookies from 'js-cookie'
 
 class Signup extends Component {
     constructor(props) {
@@ -79,11 +77,11 @@ class Signup extends Component {
                     if (res.status === 200) {
                         this.setState({ isSignedUp: true });
 
-                        cookies.set('TOKEN', res.data.token);
+                        Cookies.set('TOKEN', res.data.token);
 
-                        cookies.set('ID', res.data.user.id);
+                        Cookies.set('ID', res.data.user.id);
 
-                        cookies.set('Is_Regular', res.data.user.is_regular);
+                        Cookies.set('Is_Regular', res.data.user.is_regular);
                     }
                 }).catch((error) => {
                     if (error.response) {
@@ -126,11 +124,11 @@ class Signup extends Component {
                     if (res.status === 200) {
                         this.setState({ isSignedUp: true });
 
-                        cookies.set('TOKEN', res.data.token);
+                        Cookies.set('TOKEN', res.data.token);
 
-                        cookies.set('ID', res.data.user.id);
+                        Cookies.set('ID', res.data.user.id);
 
-                        cookies.set('Is_Regular', res.data.user.is_regular);
+                        Cookies.set('Is_Regular', res.data.user.is_regular);
                     }
                 }).catch((error) => {
                     if (error.response) {
@@ -166,6 +164,12 @@ class Signup extends Component {
     }
 
     render() {
+        if (this.state.isSignedUp) {
+            if (this.state.is_regular)
+                return <Redirect to={{ pathname: "/user-profile" }} />;
+            if (!this.state.is_regular)
+                return <Redirect to={{ pathname: "/user-profile" }} />;
+        }
         return (
             <div className="container-md">
                 <div className="row justify-content-center pt-2 pt-md-4">
@@ -253,7 +257,6 @@ class Signup extends Component {
                                                 {this.state.errcafe_password ? <small className="text text-danger">{this.state.errcafe_passwordText}</small> : null}
                                             </div>
                                         </div>
-
 
                                         <div className="input-group mb-3">
                                             <div className="input-group-prepend">
