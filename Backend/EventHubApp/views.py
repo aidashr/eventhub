@@ -11,7 +11,7 @@ from datetime import datetime
 from .serializers import UserSerializer, CafeSerializer, UpdateRegularUserSerializer, UpdateCafeSerializer, \
     ChangePasswordSerializer, EventSerializer, ParticipateSerializer, CafeFollowSerializer, PostParticipateSerializer, \
     CafeFollowersSerializer, UserFollowingsSerializer
-from .permissions import IsOwner
+from .permissions import IsOwner, IsPrivate
 from .models import User, Event, Participation, CafeFollow
 from .permissions import IsOwner, IsPostRequest, IsPutRequest, IsDeleteRequest, IsGetRequest
 
@@ -71,6 +71,8 @@ class RemoveFollowerAPI(generics.GenericAPIView):
 
 
 class GetFollowingsAPI(generics.GenericAPIView):
+    permission_classes = [IsPrivate, ]
+
     def get(self, request, **kwargs):
         try:
             user = User.objects.get(id=kwargs.get('id'))
@@ -83,6 +85,8 @@ class GetFollowingsAPI(generics.GenericAPIView):
 
 
 class GetFollowersAPI(generics.GenericAPIView):
+    permission_classes = [IsPrivate, ]
+
     def get(self, request, **kwargs):
         try:
             user = User.objects.get(id=kwargs.get('id'))
@@ -218,7 +222,7 @@ def get_future_events(request, **kwargs):
 
 
 class UserProfile(generics.GenericAPIView):
-    permission_classes = [Or(And(IsGetRequest, AllowAny),
+    permission_classes = [Or(And(IsGetRequest, IsPrivate),
                              And(IsPutRequest, IsOwner))]
 
     def get(self, request, **kwargs):
@@ -227,9 +231,6 @@ class UserProfile(generics.GenericAPIView):
 
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
-
-        if user.is_private and not request.user.username == user.username:
-            return Response({'error': 'this page is private'}, status=status.HTTP_401_UNAUTHORIZED)
 
         if user.is_regular:
             ser = UserSerializer(user)
