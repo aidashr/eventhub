@@ -228,6 +228,9 @@ class UserProfile(generics.GenericAPIView):
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+        if user.is_private and not request.user.username == user.username:
+            return Response({'error': 'this page is private'}, status=status.HTTP_401_UNAUTHORIZED)
+
         if user.is_regular:
             ser = UserSerializer(user)
 
