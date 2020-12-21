@@ -2,7 +2,6 @@ from rest_framework import permissions
 from .models import User, Event
 
 
-
 class IsOwner(permissions.BasePermission):
     def has_permission(self, request, view, **kwargs):
         try:
@@ -40,6 +39,19 @@ class IsOwner(permissions.BasePermission):
 
         else:
             return True
+
+
+class IsPrivate(permissions.BasePermission):
+    def has_permission(self, request, view, **kwargs):
+        try:
+            user = User.objects.get(id=view.kwargs.get('id'))
+        except:
+            return False
+
+        if user.is_private and not request.user.username == user.username:
+            return False
+
+        return True
 
 
 class IsPostRequest(permissions.BasePermission):
