@@ -136,3 +136,25 @@ class CafeFollowSerializer(serializers.ModelSerializer):
         cafe = User.objects.get(id=self.initial_data.get('cafe'))
         cafe_following = CafeFollow.objects.create(**validated_data, follower=user, followed=cafe)
         return cafe_following
+
+
+class FollowerFollowingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'cafe_name', 'first_name', 'last_name', 'profile_image')
+
+
+class CafeFollowersSerializer(serializers.ModelSerializer):
+    follower = FollowerFollowingSerializer()
+
+    class Meta:
+        model = CafeFollow
+        fields = '__all__'
+
+
+class UserFollowingsSerializer(serializers.ModelSerializer):
+    followed = FollowerFollowingSerializer()
+
+    class Meta:
+        model = CafeFollow
+        fields = '__all__'

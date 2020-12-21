@@ -9,7 +9,8 @@ from rest_framework.pagination import PageNumberPagination
 from datetime import datetime
 
 from .serializers import UserSerializer, CafeSerializer, UpdateRegularUserSerializer, UpdateCafeSerializer, \
-    ChangePasswordSerializer, EventSerializer, ParticipateSerializer, CafeFollowSerializer, PostParticipateSerializer
+    ChangePasswordSerializer, EventSerializer, ParticipateSerializer, CafeFollowSerializer, PostParticipateSerializer, \
+    CafeFollowersSerializer, UserFollowingsSerializer
 from .permissions import IsOwner
 from .models import User, Event, Participation, CafeFollow
 from .permissions import IsOwner, IsPostRequest, IsPutRequest, IsDeleteRequest, IsGetRequest
@@ -74,7 +75,7 @@ class GetFollowingsAPI(generics.GenericAPIView):
         try:
             user = User.objects.get(id=kwargs.get('id'))
             followings = CafeFollow.objects.filter(follower=user)
-            ser = CafeFollowSerializer(followings, many=True)
+            ser = UserFollowingsSerializer(followings, many=True)
             return Response(ser.data, status=status.HTTP_200_OK)
 
         except:
@@ -86,7 +87,7 @@ class GetFollowersAPI(generics.GenericAPIView):
         try:
             user = User.objects.get(id=kwargs.get('id'))
             followers = CafeFollow.objects.filter(followed=user)
-            ser = CafeFollowSerializer(followers, many=True)
+            ser = CafeFollowersSerializer(followers, many=True)
             return Response(ser.data, status=status.HTTP_200_OK)
 
         except:
@@ -174,7 +175,6 @@ class ParticipantsAPI(generics.GenericAPIView):
 
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
-
 
 
 @api_view(['GET', ])
