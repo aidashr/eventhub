@@ -1,5 +1,5 @@
 from rest_framework import permissions
-from .models import User, Event
+from .models import User, Event, Participation
 
 
 class IsOwner(permissions.BasePermission):
@@ -18,6 +18,19 @@ class IsOwner(permissions.BasePermission):
     def check_request(self, request, view):
         try:
             user = User.objects.get(id=request.data.get('user'))
+        except:
+            return self.check_participation_id(request=request, view=view)
+
+        if not request.user.username == user.username:
+            return False
+
+        else:
+            return True
+
+    def check_participation_id(self, request, view):
+        try:
+            participation = Participation.objects.get(id=view.kwargs.get('participation_id'))
+            user = participation.user
         except:
             return self.check_event_owner(request=request, view=view)
 
