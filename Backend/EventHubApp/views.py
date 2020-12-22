@@ -248,14 +248,20 @@ class UserProfile(generics.GenericAPIView):
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+        follower_count = len(CafeFollow.objects.filter(followed=user.id))
+        following_count = len(CafeFollow.objects.filter(follower=user.id))
+
         if user.is_regular:
             ser = UserSerializer(user)
 
         else:
             ser = CafeSerializer(user)
 
-        return Response(ser.data, status=status.HTTP_200_OK)
+        new_data = ser.data
+        new_data.update({'follower_count': follower_count, 'following_count': following_count})
 
+        return Response(new_data, status=status.HTTP_200_OK)
+    
     def put(self, request, **kwargs):
         try:
             request.data.update({'id': kwargs.get('id')})
