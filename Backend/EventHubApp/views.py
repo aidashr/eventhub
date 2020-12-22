@@ -1,7 +1,8 @@
+import django_filters.rest_framework
 from rest_condition import And, Or, Not
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework import status, generics
+from rest_framework import status, generics, mixins
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.generics import ListAPIView
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -70,32 +71,47 @@ class RemoveFollowerAPI(generics.GenericAPIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-class GetFollowingsAPI(generics.GenericAPIView):
+class GetFollowingsAPI(generics.GenericAPIView, mixins.ListModelMixin):
     permission_classes = [IsPrivate, ]
+    queryset = CafeFollow.objects.all()
+    serializer_class = UserFollowingsSerializer
+    pagination_class = PageNumberPagination
+
+    def get_queryset(self):
+        data = CafeFollow.objects.filter(follower=User.objects.get(id=self.kwargs.get('id')))
+        return data
 
     def get(self, request, **kwargs):
-        try:
-            user = User.objects.get(id=kwargs.get('id'))
-            followings = CafeFollow.objects.filter(follower=user)
-            ser = UserFollowingsSerializer(followings, many=True)
-            return Response(ser.data, status=status.HTTP_200_OK)
+        queryset = self.filter_queryset(self.get_queryset())
 
-        except:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
-class GetFollowersAPI(generics.GenericAPIView):
+class GetFollowersAPI(generics.GenericAPIView, mixins.ListModelMixin):
+    queryset = CafeFollow.objects.all()
+    serializer_class = CafeFollowersSerializer
+    pagination_class = PageNumberPagination
     permission_classes = [IsPrivate, ]
 
-    def get(self, request, **kwargs):
-        try:
-            user = User.objects.get(id=kwargs.get('id'))
-            followers = CafeFollow.objects.filter(followed=user)
-            ser = CafeFollowersSerializer(followers, many=True)
-            return Response(ser.data, status=status.HTTP_200_OK)
+    def get_queryset(self):
+        data = CafeFollow.objects.filter(followed=User.objects.get(id=self.kwargs.get('id')))
+        return data
 
-        except:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+    def get(self, request, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class CafeFollowAPI(generics.GenericAPIView):
