@@ -21,6 +21,7 @@ class Event(models.Model):
     image = models.ImageField(blank=True, null=True)
     start_time = models.DateTimeField(null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    like_count = models.IntegerField(null=True, default=0)
 
 
 class Participation(models.Model):
@@ -31,3 +32,8 @@ class Participation(models.Model):
 class CafeFollow(models.Model):
     follower = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='regular_user')
     followed = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='cafe')
+
+
+class EventLike(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, null=True)

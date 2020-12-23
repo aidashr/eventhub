@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Event, Participation, CafeFollow
+from .models import User, Event, Participation, CafeFollow, EventLike
 from django.contrib.auth import authenticate
 
 
@@ -157,4 +157,18 @@ class UserFollowingsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CafeFollow
+        fields = '__all__'
+
+
+class LikeSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+
+    class Meta:
+        model = EventLike
+        fields = '__all__'
+
+
+class PostLikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EventLike
         fields = '__all__'
