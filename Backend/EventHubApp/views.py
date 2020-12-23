@@ -11,10 +11,66 @@ from datetime import datetime
 
 from .serializers import UserSerializer, CafeSerializer, UpdateRegularUserSerializer, UpdateCafeSerializer, \
     ChangePasswordSerializer, EventSerializer, ParticipateSerializer, CafeFollowSerializer, PostParticipateSerializer, \
-    CafeFollowersSerializer, UserFollowingsSerializer
+    CafeFollowersSerializer, UserFollowingsSerializer, LikeSerializer, PostLikeSerializer
 from .permissions import IsOwner, IsPrivate
-from .models import User, Event, Participation, CafeFollow
+from .models import User, Event, Participation, CafeFollow, EventLike
 from .permissions import IsOwner, IsPostRequest, IsPutRequest, IsDeleteRequest, IsGetRequest
+
+
+class LikesAPI(generics.GenericAPIView):
+    queryset = EventLike.objects.all()
+    permission_classes = [Or(And(IsGetRequest, AllowAny),
+                             And(IsPostRequest, AllowAny),
+                             And(IsDeleteRequest, IsOwner))]
+
+    def get(self, request, **kwargs):
+        post = EventLike.objects.filter(event_id=kwargs.get('event_id'))
+        serializer = LikeSerializer(post, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, **kwargs):
+        new_data = {'event': kwargs.get('event_id'),
+                    'user': request.data.get('user')
+                    }
+
+        serializer = PostLikeSerializer(data=new_data)
+
+        event = Event.objects.get(id=new_data.get('event'))
+
+        if serializer.is_valid():
+            like = serializer.save()
+            data = {"like_count": event.like_count + 1}
+            update_ser = PostLikeSerializer(event, data=data, partial=True)
+
+            if update_ser.is_valid():
+                update_ser.update(instance=event, validated_data=data)
+
+            return Response(LikeSerializer(like).data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, **kwargs):
+        try:
+            if EventLike.objects.get(id=kwargs.get('like_id')).event.id != kwargs.get('event_id'):
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+
+            EventLike.objects.filter(id=kwargs.get('like_id')).delete()
+            event = Event.objects.get(id=kwargs.get('event_id'))
+
+            data = {"like_count": event.like_count - 1}
+
+            if event.like_count == 0:
+                data = {"like_count": 0}
+
+            update_ser = PostLikeSerializer(event, data=data, partial=True)
+
+            if update_ser.is_valid():
+                update_ser.update(instance=event, validated_data=data)
+
+            return Response(status=status.HTTP_200_OK)
+
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 class CafeEventsAPI(generics.GenericAPIView):
@@ -141,7 +197,7 @@ class ParticipantsAPI(generics.GenericAPIView):
     queryset = Participation.objects.all()
     serializer_class = ParticipateSerializer
     permission_classes = [Or(And(IsGetRequest, AllowAny),
-                             And(IsPostRequest, IsOwner),
+                             And(IsPostRequest, AllowAny),
                              And(IsDeleteRequest, IsOwner))]
 
     def get(self, request, **kwargs):
