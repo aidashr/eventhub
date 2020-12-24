@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .api import RegisterAPI, LoginAPI, EventAPI, PostEventAPI
+from .api import RegisterAPI, LoginAPI, EventAPI, PostEventAPI,EventRateAPI
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
@@ -18,6 +18,7 @@ urlpatterns = [
     path('users/<int:id>/followers', views.GetFollowersAPI.as_view()),
     path('users/<int:id>/followers/<int:follower>', views.RemoveFollowerAPI.as_view()),
     path('users/<int:id>/followings', views.GetFollowingsAPI.as_view()),
+    path('users/<int:id>/event/<int:event_id>', EventRateAPI.as_view()),
     path('cafe/latest', views.get_cafes),
     path('event/latest', views.get_events),
     path('event/<int:event_id>', EventAPI.as_view()),
