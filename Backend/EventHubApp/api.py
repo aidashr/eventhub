@@ -9,8 +9,33 @@ from .serializers import UserSerializer, UserRegisterSerializer, CafeRegisterSer
     EventSerializer, UpdateEventSerializer
 
 from .models import Event, User
-from .permissions import IsOwner
-from .permissions import IsOwner, IsPostRequest, IsPutRequest, IsDeleteRequest, IsGetRequest
+from .permissions import IsOwner, IsPostRequest, IsPutRequest, IsDeleteRequest, IsGetRequest, IsParticipant
+
+
+class EventRateAPI(generics.GenericAPIView):
+    serializer_class = EventSerializer
+    permission_classes = [IsPutRequest, IsOwner, IsParticipant]
+
+    def put(self, request, *args, **kwargs):
+        if not 0 < request.data.get('rate') < 6:
+            return Response({'error': 'rating must be between 1 to 5'}, status=status.HTTP_400_BAD_REQUEST)
+
+        event = Event.objects.get(id=kwargs.get('event_id'))
+        curr_rate = event.rate
+        if curr_rate is None:
+            curr_rate = 0
+        curr_rate_count = event.rate_count
+        rate = (curr_rate * curr_rate_count) + request.data.get('rate')
+        rate_count = curr_rate_count + 1
+        rate = rate / rate_count
+
+        request.data.update({'rate': rate, 'rate_count': rate_count})
+        serializer = UpdateEventSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        updated_event = serializer.update(instance=event, validated_data=request.data)
+        return Response({
+            "event": EventSerializer(updated_event, context=self.get_serializer_context()).data
+        })
 
 
 class PostEventAPI(generics.GenericAPIView):

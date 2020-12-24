@@ -54,6 +54,20 @@ class IsOwner(permissions.BasePermission):
             return True
 
 
+class IsParticipant(permissions.BasePermission):
+    def has_permission(self, request, view, **kwargs):
+        try:
+            participation = Participation.objects.filter(event_id=view.kwargs.get('event_id'))
+            user = participation[0].user
+        except:
+            return False
+
+        if not request.user.username == user.username:
+            return False
+
+        return True
+
+
 class IsPrivate(permissions.BasePermission):
     def has_permission(self, request, view, **kwargs):
         try:

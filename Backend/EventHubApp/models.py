@@ -22,6 +22,8 @@ class Event(models.Model):
     start_time = models.DateTimeField(null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     like_count = models.IntegerField(null=True, default=0)
+    rate = models.FloatField(null=True, default=None)
+    rate_count = models.IntegerField(null=True, default=0)
 
 
 class Participation(models.Model):
