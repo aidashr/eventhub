@@ -11,10 +11,93 @@ from datetime import datetime
 
 from .serializers import UserSerializer, CafeSerializer, UpdateRegularUserSerializer, UpdateCafeSerializer, \
     ChangePasswordSerializer, EventSerializer, ParticipateSerializer, CafeFollowSerializer, PostParticipateSerializer, \
-    CafeFollowersSerializer, UserFollowingsSerializer, LikeSerializer, PostLikeSerializer
+    CafeFollowersSerializer, UserFollowingsSerializer, LikeSerializer, PostLikeSerializer, CommentSerializer, \
+    PostCommentSerializer, PostCommentLikeSerializer, CommentLikeSerializer
 from .permissions import IsOwner, IsPrivate
-from .models import User, Event, Participation, CafeFollow, EventLike
+from .models import User, Event, Participation, CafeFollow, EventLike, EventComment, CommentLike
 from .permissions import IsOwner, IsPostRequest, IsPutRequest, IsDeleteRequest, IsGetRequest
+
+
+class CommentLikesAPI(generics.GenericAPIView):
+    queryset = CommentLike.objects.all()
+    permission_classes = [Or(And(IsPostRequest, IsAuthenticated),
+                             And(IsDeleteRequest, IsAuthenticated))]
+
+    def post(self, request, **kwargs):
+        new_data = {'comment': kwargs.get('comment_id'),
+                    'user': request.user.id
+                    }
+
+        serializer = PostCommentLikeSerializer(data=new_data)
+
+        comment = EventComment.objects.get(id=new_data.get('comment'))
+
+        if serializer.is_valid():
+            comment_like = serializer.save()
+            data = {"like_count": comment.like_count + 1}
+            update_ser = PostCommentLikeSerializer(comment, data=data, partial=True)
+
+            if update_ser.is_valid():
+                update_ser.update(instance=comment, validated_data=data)
+
+            return Response(CommentLikeSerializer(comment_like).data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, **kwargs):
+        try:
+            if CommentLike.objects.get(id=kwargs.get('like_id')).comment.id != kwargs.get('comment_id'):
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+
+            if CommentLike.objects.get(id=kwargs.get('like_id')).user.id != request.user.id:
+                return Response(status=status.HTTP_403_FORBIDDEN)
+
+            CommentLike.objects.filter(id=kwargs.get('like_id')).delete()
+            comment = EventComment.objects.get(id=kwargs.get('comment_id'))
+
+            data = {"like_count": comment.like_count - 1}
+
+            if comment.like_count == 0:
+                data = {"like_count": 0}
+
+            update_ser = PostCommentLikeSerializer(comment, data=data, partial=True)
+
+            if update_ser.is_valid():
+                update_ser.update(instance=comment, validated_data=data)
+
+            return Response(status=status.HTTP_200_OK)
+
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class CommentAPI(generics.GenericAPIView):
+    queryset = EventComment.objects.all()
+    permission_classes = [Or(And(IsGetRequest, AllowAny),
+                             And(IsPostRequest, IsAuthenticated))]
+
+    def get(self, request, **kwargs):
+        comments = EventComment.objects.filter(event_id=kwargs.get('event_id'))
+        serializer = CommentSerializer(comments, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, **kwargs):
+        new_data = {'event': kwargs.get('event_id'),
+                    'user': request.user.id,
+                    'content': request.data.get('comment')
+                    }
+
+        if Participation.objects.filter(event=kwargs.get('event_id'), user=request.user.id):
+            new_data.update({'is_participant': True})
+
+        serializer = PostCommentSerializer(data=new_data)
+
+        if serializer.is_valid():
+            comment = serializer.save()
+
+            return Response(CommentSerializer(comment).data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LikesAPI(generics.GenericAPIView):

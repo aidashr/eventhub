@@ -39,3 +39,16 @@ class CafeFollow(models.Model):
 class EventLike(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     event = models.ForeignKey(Event, on_delete=models.CASCADE, null=True)
+
+
+class EventComment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, null=True)
+    is_participant = models.BooleanField(null=True, default=False)
+    content = models.CharField(null=True, max_length=450)
+    like_count = models.IntegerField(null=True, default=0)
+
+
+class CommentLike(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    comment = models.ForeignKey(EventComment, on_delete=models.CASCADE, null=True)
