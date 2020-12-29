@@ -14,8 +14,20 @@ from .serializers import UserSerializer, CafeSerializer, UpdateRegularUserSerial
     CafeFollowersSerializer, UserFollowingsSerializer, LikeSerializer, PostLikeSerializer, CommentSerializer, \
     PostCommentSerializer, PostCommentLikeSerializer, CommentLikeSerializer
 from .permissions import IsOwner, IsPrivate
-from .models import User, Event, Participation, CafeFollow, EventLike, EventComment, CommentLike
+from .models import User, Event, Participation, CafeFollow, EventLike, EventComment, CommentLike, Tags
 from .permissions import IsOwner, IsPostRequest, IsPutRequest, IsDeleteRequest, IsGetRequest
+
+
+class GetTags(generics.GenericAPIView):
+    def get(self, request, **kwargs):
+        new_data = request.data
+        counter = 1
+
+        for tag in Tags:
+            new_data.update({'tag' + str(counter): str(tag).split('.')[1]})
+            counter += 1
+
+        return Response(new_data, status=status.HTTP_200_OK)
 
 
 class CommentLikesAPI(generics.GenericAPIView):

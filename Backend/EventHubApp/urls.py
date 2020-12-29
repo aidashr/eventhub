@@ -30,6 +30,7 @@ urlpatterns = [
     path('event/<int:event_id>/comment',  views.CommentAPI.as_view()),
     path('comment/<int:comment_id>/like',  views.CommentLikesAPI.as_view()),
     path('comment/<int:comment_id>/like/<int:like_id>',  views.CommentLikesAPI.as_view()),
+    path('event/tags', views.GetTags.as_view()),
     path('event/search', views.SearchEvent.as_view()),
     path('cafe/search', views.SearchCafe.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

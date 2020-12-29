@@ -187,6 +187,7 @@ class PostCommentSerializer(serializers.ModelSerializer):
         model = EventComment
         fields = '__all__'
 
+
 class CommentLikeSerializer(serializers.ModelSerializer):
     user = UserSerializer()
 
