@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from enum import Enum
 
 
 class User(AbstractUser):
@@ -24,6 +25,7 @@ class Event(models.Model):
     like_count = models.IntegerField(null=True, default=0)
     rate = models.FloatField(null=True, default=None)
     rate_count = models.IntegerField(null=True, default=0)
+    tags = models.CharField(null=True, max_length=450)
 
 
 class Participation(models.Model):
@@ -52,3 +54,12 @@ class EventComment(models.Model):
 class CommentLike(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     comment = models.ForeignKey(EventComment, on_delete=models.CASCADE, null=True)
+
+
+class Tags(Enum):
+    video_game = 'video game'
+    board_game = 'board game'
+    game = 'game'
+    movie_review = 'movie review'
+    book_review = 'book review'
+    sport_event = 'sports events'

@@ -5,10 +5,9 @@ from rest_framework.response import Response
 from knox.models import AuthToken
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .serializers import UserSerializer, UserRegisterSerializer, CafeRegisterSerializer, CafeSerializer, \
-    LoginSerializer, \
-    EventSerializer, UpdateEventSerializer
+    LoginSerializer, EventSerializer, UpdateEventSerializer
 
-from .models import Event, User
+from .models import Event, User, Tags
 from .permissions import IsOwner, IsPostRequest, IsPutRequest, IsDeleteRequest, IsGetRequest, IsParticipant
 
 
@@ -38,11 +37,33 @@ class EventRateAPI(generics.GenericAPIView):
         })
 
 
+def validate_tags(tags):
+    is_valid = False
+    for req_tag in tags:
+        for tag in Tags:
+            if str(tag).split('.')[1] == req_tag:
+                is_valid = True
+                break
+
+        if is_valid:
+            is_valid = False
+
+        else:
+            return False
+
+    return True
+
+
 class PostEventAPI(generics.GenericAPIView):
     serializer_class = EventSerializer
     permission_classes = (IsAuthenticated, IsOwner)
 
     def post(self, request, *args, **kwargs):
+        tags = request.data.get('tags').split('$')
+
+        if not validate_tags(tags):
+            return Response({'error': 'invalid tag'}, status=status.HTTP_400_BAD_REQUEST)
+
         serializer = UpdateEventSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         event = serializer.save()
@@ -58,6 +79,12 @@ class EventAPI(generics.GenericAPIView):
                              And(IsDeleteRequest, IsOwner))]
 
     def put(self, request, *args, **kwargs):
+        tags = request.data.get('tags')
+        if tags is not None:
+            tags = tags.split('$')
+            if not validate_tags(tags):
+                return Response({'error': 'invalid tag'}, status=status.HTTP_400_BAD_REQUEST)
+
         serializer = UpdateEventSerializer(data=request.data)
         event = Event.objects.get(id=kwargs.get('event_id'))
         request.data.update({'user': User.objects.get(id=event.user.id)})
