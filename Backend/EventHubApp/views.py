@@ -509,6 +509,75 @@ class SearchEvent(ListAPIView):
     filter_backends = (SearchFilter, OrderingFilter)
     search_fields = ['title', ]
 
+    def get_queryset(self):
+        query_set = Event.objects.all()
+
+        try:
+            event_ser = EventSerializer(query_set, many=True)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        new_event = event_ser.data
+
+        start_time = self.request.query_params.get('start_time')
+        if start_time is not None:
+            start_time = datetime.strptime(start_time, '%Y-%m-%dT%H:%M:%S')
+
+            counter = 0
+            for i in range(len(new_event)):
+                event_time = str(new_event[i - counter].get('start_time')).split('+')[0]
+                event_time = datetime.strptime(event_time, '%Y-%m-%dT%H:%M:%S')
+
+                if not start_time <= event_time:
+                    query_set = query_set.exclude(id=new_event[i - counter].get('id'))
+                    new_event.pop(i - counter)
+                    counter += 1
+
+        capacity_count = self.request.query_params.get('capacity_count')
+        if capacity_count is not None:
+            counter = 0
+
+            for i in range(len(new_event)):
+                event_capacity = new_event[i - counter].get('capacity')
+
+                if event_capacity < int(capacity_count):
+                    query_set = query_set.exclude(id=new_event[i - counter].get('id'))
+                    new_event.pop(i - counter)
+                    counter += 1
+
+        tags = self.request.query_params.get('tags')
+        if tags is not None:
+            tags = tags.split('$')
+            counter = 0
+
+            for i in range(len(new_event)):
+                event_tags = new_event[i - counter].get('tags')
+
+                if event_tags is not None:
+                    event_tags = event_tags.split('$')
+
+                    for tag in tags:
+                        has_tag = False
+
+                        for event_tag in event_tags:
+                            if tag == event_tag:
+                                has_tag = True
+                                break
+
+                        if not has_tag:
+                            query_set = query_set.exclude(id=new_event[i - counter].get('id'))
+                            print(i - counter)
+                            new_event.pop(i - counter)
+                            counter += 1
+                            break
+
+                else:
+                    query_set = query_set.exclude(id=new_event[i - counter].get('id'))
+                    new_event.pop(i - counter)
+                    counter += 1
+
+        return query_set
+
 
 class SearchCafe(ListAPIView):
     queryset = User.objects.all()
