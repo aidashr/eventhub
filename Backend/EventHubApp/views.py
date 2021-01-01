@@ -226,7 +226,7 @@ class GetFollowingsAPI(generics.GenericAPIView, mixins.ListModelMixin):
     permission_classes = [IsPrivate, ]
     queryset = CafeFollow.objects.all()
     serializer_class = UserFollowingsSerializer
-    pagination_class = PageNumberPagination
+    # pagination_class = PageNumberPagination
 
     def get_queryset(self):
         data = CafeFollow.objects.filter(follower=User.objects.get(id=self.kwargs.get('id')))
@@ -247,7 +247,7 @@ class GetFollowingsAPI(generics.GenericAPIView, mixins.ListModelMixin):
 class GetFollowersAPI(generics.GenericAPIView, mixins.ListModelMixin):
     queryset = CafeFollow.objects.all()
     serializer_class = CafeFollowersSerializer
-    pagination_class = PageNumberPagination
+    # pagination_class = PageNumberPagination
     permission_classes = [IsPrivate, ]
 
     def get_queryset(self):
