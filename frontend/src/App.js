@@ -14,6 +14,8 @@ class App extends Component {
     return (
       <Router>
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
         <div className="App">
           <Navbar />
           <Route exact path="/" component={Main}></Route>
@@ -24,6 +26,7 @@ class App extends Component {
           <Route exact path="/search-result" component={Search}></Route>
         </div>
 =======
+>>>>>>> dev
         <Navbar />
         <Route exact path="/" component={Main}></Route>
         <Route exact path="/sign-up" component={Signup}></Route>
@@ -32,6 +35,9 @@ class App extends Component {
         <Route exact path="/search-result" component={Search}></Route>
         <Route exact path="/user-profile/:id" component={Userprofile}></Route>
         <Route exact path="/cafe-profile/:id" component={Cafeprofile}></Route>
+<<<<<<< HEAD
+=======
+>>>>>>> dev
 >>>>>>> dev
       </Router>
     );
