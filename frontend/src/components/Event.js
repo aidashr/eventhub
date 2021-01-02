@@ -1,55 +1,58 @@
-import React, { Component } from 'react'
-import PorpsType from 'prop-types'
+import React, { Component } from "react";
+import PorpsType from "prop-types";
 
 export class Event extends Component {
-    render() {
-        return (
-            <div className="col-12 col-md-6 col-lg-4 pr-2">
-                <div className="row no-gutters">
-                    <div className="col w-100 border border-secondary rounded">
-                        <div className="row no-gutters bg-light p-2 align-items-center">
-                            <img className="border border-secondary rounded-circle p-1 mr-2" src={this.props.event.user.image} width={48} height={48} alt="..." />
-                            <div className="font-weight-bold">{this.props.event.user.user_name}</div>
-                        </div>
+  render() {
+    return (
+      <div style={{ borderRadius: "8px", border: "1px solid gray" }}>
+        <div className='row no-gutters bg-light p-2 align-items-center'>
+          <a href={"/profile/" + this.props.event.user.id}>
+            <img
+              className='shadow-lg border border-secondary rounded-circle mr-2'
+              src={
+                "http://127.0.0.1:8000" + this.props.event.user.profile_image
+              }
+              width={48}
+              height={48}
+              alt='profile'
+            />
+          </a>
+          <a
+            href={"/profile/" + this.props.event.user.id}
+            className='text-decoration-none text-body font-weight-bold'>
+            {this.props.event.user.username}
+          </a>
+        </div>
 
-                        <div className="row no-gutters">
-                            <div id={'imagesCarouselControls' + this.props.event.id} class="carousel slide" data-ride="carousel" data-interval="false">
-                                <ol class="carousel-indicators">
-                                    <li data-target={'#imagesCarouselControls' + this.props.event.id} data-slide-to="0" class="active"></li>
-                                    <li data-target={'#imagesCarouselControls' + this.props.event.id} data-slide-to="1"></li>
-                                    <li data-target={'#imagesCarouselControls' + this.props.event.id} data-slide-to="2"></li>
-                                </ol>
-                                <div class="carousel-inner">
-                                    <div class="carousel-item active"><img className="d-block w-100" src={this.props.event.image} alt="..." /></div>
-                                    <div class="carousel-item"><img className="d-block w-100" src={this.props.event.image} alt="..." /></div>
-                                    <div class="carousel-item"><img className="d-block w-100" src={this.props.event.image} alt="..." /></div>
-                                </div>
-                                <a class="carousel-control-prev" href={'#imagesCarouselControls' + this.props.event.id} role="button" data-slide="prev">
-                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    <span class="sr-only">Previous</span>
-                                </a>
-                                <a class="carousel-control-next" href={'#imagesCarouselControls' + this.props.event.id} role="button" data-slide="next">
-                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="sr-only">Next</span>
-                                </a>
-                            </div>
-                        </div>
+        {this.props.event.image ? (
+          <div className='row no-gutters w-100'>
+            <img
+              className='d-block w-100'
+              src={"http://127.0.0.1:8000" + this.props.event.image}
+              alt='event'
+            />
+          </div>
+        ) : null}
 
-                        <div className="row no-gutters bg-light p-2">
-                            <div className="col w-100">
-                                <div className="row no-gutters" data-toggle="tooltip" data-placement="top" title={'start at ' + this.props.event.start_time}><h5>{this.props.event.title}</h5></div>
-                                <div className="row no-gutters">{this.props.event.description}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div className='row no-gutters bg-light p-2'>
+          <div className='col w-100'>
+            <div
+              className='row no-gutters'
+              data-toggle='tooltip'
+              data-placement='top'
+              title={"start at " + this.props.event.start_time}>
+              <h5>{this.props.event.title}</h5>
             </div>
-        )
-    }
+            <div className='row no-gutters'>{this.props.event.description}</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
 
 Event.PorpsType = {
-    event: PorpsType.object.isRequired
-}
+  event: PorpsType.object.isRequired,
+};
 
-export default Event
+export default Event;

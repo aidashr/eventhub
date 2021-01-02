@@ -1,11 +1,4 @@
-.user-profile-container {
-  background-color: #f7efe8;
-  height: 100vh;
-  width: 100%;
-  padding-top: 16px;
-}
-
-.user-profile-header {
+.profile-header {
   width: 100%;
   height: 200px;
   position: relative;
@@ -17,7 +10,7 @@
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-.user-profile-header-container {
+.profile-header-container {
   height: fit-content;
   width: 100%;
   display: flex;
@@ -30,7 +23,7 @@
   padding-bottom: 16px;
 }
 
-.user-profile-image-container {
+.profile-image-container {
   position: relative;
   height: fit-content;
   width: fit-content;
@@ -39,7 +32,7 @@
   border-radius: 50%;
 }
 
-.user-profile-image-container-image {
+.profile-image-container > img {
   position: relative;
   height: 200px;
   width: 200px;
@@ -48,7 +41,7 @@
   border-radius: 50%;
 }
 
-.user-profile-image-container-text {
+.profile-image-container > p {
   transition: 0.5s ease;
   opacity: 0;
   position: absolute;
@@ -61,15 +54,15 @@
   -moz-user-select: none;
 }
 
-.user-profile-image-container:hover .user-profile-image-container-image {
+.own-profile:hover .own-profile-image {
   opacity: 0.5;
 }
 
-.user-profile-image-container:hover .user-profile-image-container-text {
+.own-profile:hover .own-profile-text {
   opacity: 1;
 }
 
-.user-profile-info-container {
+.profile-info-container {
   position: relative;
   height: fit-content;
   width: 100%;
@@ -78,7 +71,7 @@
   margin-left: 16px;
 }
 
-.user-profile-info-container > h3 {
+.profile-info-container > h3 {
   height: fit-content;
   width: fit-content;
   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
@@ -89,7 +82,7 @@
   margin: 0px;
 }
 
-.user-profile-info-container-details {
+.profile-info-container-details {
   position: absolute;
   right: 0px;
   bottom: 0px;
@@ -99,7 +92,7 @@
   margin-top: 8px;
 }
 
-.user-profile-info-container-details-column {
+.profile-info-container-details-column {
   display: flex;
   flex-direction: column;
   padding-left: 8px;
@@ -108,7 +101,7 @@
   padding: 0px;
 }
 
-.user-profile-info-container-details-border {
+.profile-info-container-details-border {
   width: 1px;
   border-width: 1px;
   border-style: solid;
@@ -116,7 +109,7 @@
   border-radius: 1px;
 }
 
-.user-profile-info-container-details-number {
+.profile-info-container-details-number {
   margin: 0px;
   font-size: 20px;
   font-weight: bold;
@@ -124,7 +117,7 @@
   text-align: center;
 }
 
-.user-profile-info-container-details-text {
+.profile-info-container-details-text {
   margin: 0px;
   font-size: 16px;
   font-weight: 600;
@@ -132,7 +125,52 @@
   text-align: center;
 }
 
-.user-profile-info-container > p {
+.profile-info-modal-container {
+  padding: 16px;
+  max-height: 650px;
+  overflow-y: scroll;
+}
+.profile-info-modal-item {
+  width: 100%;
+  height: fit-content;
+  background-color: white;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
+  padding: 8px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  border-color: gray;
+  border-style: solid;
+  border-width: 1px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.profile-info-modal-item > a > img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+}
+.profile-info-modal-item > .info {
+  margin-left: 8px;
+}
+.profile-info-modal-item > .info > p {
+  margin: 0px;
+  margin-bottom: -4px;
+  font-weight: 600;
+}
+.profile-info-modal-item > .info > small {
+  margin: 0px;
+  color: gray;
+}
+.profile-info-modal-item > button {
+  margin-left: auto;
+  font-weight: 600;
+  font-size: 16px;
+  margin-right: 8px;
+}
+
+.profile-info-container > p {
   height: fit-content;
   width: fit-content;
   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
@@ -142,55 +180,59 @@
   margin: 0px;
 }
 
-.user-profile-info-container > button {
+.profile-info-container > button {
   position: relative;
   height: fit-content;
   width: fit-content;
   font-weight: 600;
-  border-width: 2px;
   font-size: 16px;
   margin-top: 8px;
 }
 
+.profile-events-container {
+  width: 100%;
+  height: fit-content;
+  margin-bottom: 32px;
+}
 @media only screen and (max-width: 576px) {
-  .user-profile-header {
+  .profile-header {
     padding-top: 32px;
     height: fit-content;
     margin-bottom: 16px;
   }
-  .user-profile-header-container {
+  .profile-header-container {
     flex-direction: column;
     align-items: center;
     position: relative;
   }
-  .user-profile-info-container {
+  .profile-info-container {
     width: 100%;
     align-items: center;
   }
 
-  .user-profile-image-container {
+  .profile-image-container {
     position: relative;
     transform: translate(0px, 0px);
     margin-bottom: 16px;
   }
-  .user-profile-image-container-image {
+  .profile-image-container-image {
     width: 150px;
     height: 150px;
     background: #fff;
   }
 
-  .user-profile-info-container {
+  .profile-info-container {
     margin-left: 0px;
   }
 
-  .user-profile-info-container > p {
+  .profile-info-container > p {
     margin-top: 8px;
   }
-  .user-profile-info-container-details {
+  .profile-info-container-details {
     position: relative;
   }
 
-  .user-profile-info-container > button {
+  .profile-info-container > button {
     position: relative;
     right: 0;
     width: 100%;
