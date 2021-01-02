@@ -13,6 +13,17 @@ class App extends Component {
   render() {
     return (
       <Router>
+<<<<<<< HEAD
+        <div className="App">
+          <Navbar />
+          <Route exact path="/" component={Main}></Route>
+          <Route exact path="/sign-up" component={Signup}></Route>
+          <Route exact path="/sign-in" component={Login}></Route>
+          <Route exact path="/user-profile" component={Userprofile}></Route>
+          <Route exact path="/Event-Details" component={EventDetails}></Route>
+          <Route exact path="/search-result" component={Search}></Route>
+        </div>
+=======
         <Navbar />
         <Route exact path="/" component={Main}></Route>
         <Route exact path="/sign-up" component={Signup}></Route>
@@ -21,6 +32,7 @@ class App extends Component {
         <Route exact path="/search-result" component={Search}></Route>
         <Route exact path="/user-profile/:id" component={Userprofile}></Route>
         <Route exact path="/cafe-profile/:id" component={Cafeprofile}></Route>
+>>>>>>> dev
       </Router>
     );
   }
