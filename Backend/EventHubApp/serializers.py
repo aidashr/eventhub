@@ -120,6 +120,14 @@ class ParticipateSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ParticipateSerializer2(serializers.ModelSerializer):
+    event = EventSerializer()
+
+    class Meta:
+        model = Participation
+        fields = 'all'
+
+
 class PostParticipateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Participation
