@@ -1,5 +1,5 @@
 from rest_framework import permissions
-from .models import User, Event, Participation
+from .models import User, Event, Participation, CafeFollow
 
 
 class IsOwner(permissions.BasePermission):
@@ -72,13 +72,19 @@ class IsPrivate(permissions.BasePermission):
     def has_permission(self, request, view, **kwargs):
         try:
             user = User.objects.get(id=view.kwargs.get('id'))
+
+            if not user.is_private or request.user.username == user.username:
+                return True
+
+            else:
+                followers = CafeFollow.objects.filter(followed=User.objects.get(id=user.id))
+                follower = followers.filter(follower=request.user)
+                if not len(follower) == 0:
+                    return True
         except:
             return False
 
-        if user.is_private and not request.user.username == user.username:
-            return False
-
-        return True
+        return False
 
 
 class IsPostRequest(permissions.BasePermission):
