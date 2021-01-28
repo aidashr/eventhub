@@ -10,6 +10,7 @@ urlpatterns = [
     path('users/login', LoginAPI.as_view()),
     path('users/<int:id>', views.UserProfile.as_view()),
     path('users/<int:id>/events', views.CafeEventsAPI.as_view()),
+    path('users/<int:id>/achievements', views.GetAchievements.as_view()),
     path('users/<int:id>/participated-events', views.GetParticipatedEventsAPI.as_view()),
     path('users/<int:id>/future-events', views.get_future_events),
     path('users/<int:id>/past-events', views.get_past_events),
