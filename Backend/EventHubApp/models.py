@@ -9,13 +9,13 @@ class User(AbstractUser):
     email = models.EmailField(null=True, max_length=254, unique=True)
     is_regular = models.BooleanField(default=False)
     profile_image = models.ImageField(blank=True, null=True)
-    cafe_address = models.CharField(null=True, max_length=500)
+    cafe_address = models.CharField(null=True, max_length=1000)
     is_private = models.BooleanField(default=False)
 
 
 class Event(models.Model):
     title = models.CharField(null=True, max_length=50)
-    description = models.CharField(null=True, max_length=450)
+    description = models.CharField(null=True, max_length=1500)
     created_at = models.DateTimeField(auto_now=True, auto_now_add=False)
     capacity = models.IntegerField(null=True, default=10)
     participants_count = models.IntegerField(null=True, default=0)
@@ -47,7 +47,6 @@ class EventComment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     event = models.ForeignKey(Event, on_delete=models.CASCADE, null=True)
     is_participant = models.BooleanField(null=True, default=False)
-    content = models.CharField(null=True, max_length=450)
     like_count = models.IntegerField(null=True, default=0)
 
 
