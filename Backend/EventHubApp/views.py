@@ -91,7 +91,20 @@ class CommentAPI(generics.GenericAPIView):
     def get(self, request, **kwargs):
         comments = EventComment.objects.filter(event_id=kwargs.get('event_id'))
         serializer = CommentSerializer(comments, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        if str(request.user) == 'AnonymousUser':
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        new_data = []
+
+        for comment in comments:
+            like = CommentLike.objects.filter(comment=comment, user=request.user)
+
+            if len(like) == 0:
+                continue
+
+            new_data.append([comment.id, True])
+
+        return Response(serializer.data + new_data, status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request, **kwargs):
         new_data = {'event': kwargs.get('event_id'),
@@ -412,7 +425,7 @@ class UserProfile(generics.GenericAPIView):
         new_data.update({'follower_count': follower_count, 'following_count': following_count})
 
         return Response(new_data, status=status.HTTP_200_OK)
-    
+
     def put(self, request, **kwargs):
         try:
             request.data.update({'id': kwargs.get('id')})
