@@ -194,10 +194,10 @@ class CafeEventsAPI(generics.GenericAPIView):
                     return Response(status=status.HTTP_404_NOT_FOUND)
 
             from_time = request.query_params.get("from")
-            from_time = datetime.strptime(from_time, '%Y-%m-%dT%H:%M:%S')
+            from_time = datetime.strptime(from_time, '%Y-%m-%d')
 
             to_time = request.query_params.get("to")
-            to_time = datetime.strptime(to_time, '%Y-%m-%dT%H:%M:%S')
+            to_time = datetime.strptime(to_time, '%Y-%m-%d')
 
             try:
                 events = Event.objects.filter(user_id=kwargs.get('id'))
@@ -239,6 +239,7 @@ class GetFollowingsAPI(generics.GenericAPIView, mixins.ListModelMixin):
     permission_classes = [IsPrivate, ]
     queryset = CafeFollow.objects.all()
     serializer_class = UserFollowingsSerializer
+
     # pagination_class = PageNumberPagination
 
     def get_queryset(self):
@@ -374,7 +375,8 @@ def get_past_events(request, **kwargs):
 
     counter = 0
     for i in range(len(new_event)):
-        if datetime.strptime(str(new_event[i - counter].get('start_time')).split('+')[0], '%Y-%m-%dT%H:%M:%S') > datetime.now():
+        if datetime.strptime(str(new_event[i - counter].get('start_time')).split('+')[0],
+                             '%Y-%m-%dT%H:%M:%S') > datetime.now():
             new_event.pop(i - counter)
             counter += 1
 
@@ -394,7 +396,8 @@ def get_future_events(request, **kwargs):
 
     counter = 0
     for i in range(len(new_event)):
-        if datetime.strptime(str(new_event[i - counter].get('start_time')).split('+')[0], '%Y-%m-%dT%H:%M:%S') <= datetime.now():
+        if datetime.strptime(str(new_event[i - counter].get('start_time')).split('+')[0],
+                             '%Y-%m-%dT%H:%M:%S') <= datetime.now():
             new_event.pop(i - counter)
             counter += 1
 
