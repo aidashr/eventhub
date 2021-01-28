@@ -12,10 +12,31 @@ from datetime import datetime
 from .serializers import UserSerializer, CafeSerializer, UpdateRegularUserSerializer, UpdateCafeSerializer, \
     ChangePasswordSerializer, EventSerializer, ParticipateSerializer, CafeFollowSerializer, PostParticipateSerializer, \
     CafeFollowersSerializer, UserFollowingsSerializer, LikeSerializer, PostLikeSerializer, CommentSerializer, \
-    PostCommentSerializer, PostCommentLikeSerializer, CommentLikeSerializer
+    PostCommentSerializer, PostCommentLikeSerializer, CommentLikeSerializer, ParticipateSerializer2
 from .permissions import IsOwner, IsPrivate
 from .models import User, Event, Participation, CafeFollow, EventLike, EventComment, CommentLike, Tags
 from .permissions import IsOwner, IsPostRequest, IsPutRequest, IsDeleteRequest, IsGetRequest
+
+
+class GetParticipatedEventsAPI(generics.GenericAPIView, mixins.ListModelMixin):
+    permission_classes = [IsPrivate, ]
+    queryset = Participation.objects.all()
+    serializer_class = ParticipateSerializer2
+
+    def get_queryset(self):
+        data = Participation.objects.filter(user=User.objects.get(id=self.kwargs.get('id')))
+        return data
+
+    def get(self, request, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class GetTags(generics.GenericAPIView):
