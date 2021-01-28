@@ -1,4 +1,3 @@
-import django_filters.rest_framework
 from rest_condition import And, Or, Not
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -14,8 +13,55 @@ from .serializers import UserSerializer, CafeSerializer, UpdateRegularUserSerial
     CafeFollowersSerializer, UserFollowingsSerializer, LikeSerializer, PostLikeSerializer, CommentSerializer, \
     PostCommentSerializer, PostCommentLikeSerializer, CommentLikeSerializer, ParticipateSerializer2
 from .permissions import IsOwner, IsPrivate
-from .models import User, Event, Participation, CafeFollow, EventLike, EventComment, CommentLike, Tags
+from .models import User, Event, Participation, CafeFollow, EventLike, EventComment, CommentLike, Tags, UserAchievement, \
+    CafeAchievement
 from .permissions import IsOwner, IsPostRequest, IsPutRequest, IsDeleteRequest, IsGetRequest
+
+
+class GetAchievements(generics.GenericAPIView, mixins.ListModelMixin):
+    permission_classes = [IsPrivate, ]
+    serializer_class = ParticipateSerializer2
+
+    def get(self, request, **kwargs):
+        user = User.objects.get(id=self.kwargs.get('id'))
+
+        if user.is_regular:
+            participation = Participation.objects.filter(user=user)
+            participation_count = 0
+            for p in participation:
+                if p.event.start_time < datetime.now():
+                    participation_count += 1
+
+            likes_count = len(EventLike.objects.filter(user=user))
+            comment_count = len(EventComment.objects.filter(user=user))
+
+            return_data = [
+                [str(UserAchievement.event_participation).split('.')[1], {'participation_count': participation_count
+                    , 'data': UserAchievement.event_participation.value}],
+                [str(UserAchievement.user_likes).split('.')[1], {'likes_count': likes_count
+                    , 'data': UserAchievement.user_likes.value}],
+                [str(UserAchievement.user_comments).split('.')[1], {'comment_count': comment_count
+                    , 'data': UserAchievement.user_comments.value}]]
+
+            return Response(return_data)
+
+        else:
+            event_count = len(Event.objects.filter(user=user))
+            participants_count = len(Participation.objects.filter(event__user=user))
+            likes_count = len(EventLike.objects.filter(event__user=user))
+            followers_count = len(CafeFollow.objects.filter(followed=user))
+
+            return_data = [
+                [str(CafeAchievement.make_event).split('.')[1], {'event_count': event_count
+                    , 'data': CafeAchievement.make_event.value}],
+                [str(CafeAchievement.having_participants).split('.')[1], {'participants_count': participants_count
+                    , 'data': CafeAchievement.having_participants.value}],
+                [str(CafeAchievement.post_likes).split('.')[1], {'likes_count': likes_count
+                    , 'data': CafeAchievement.post_likes.value}],
+                [str(CafeAchievement.followers).split('.')[1], {'followers_count': followers_count
+                    , 'data': CafeAchievement.followers.value}]]
+
+            return Response(return_data)
 
 
 class GetParticipatedEventsAPI(generics.GenericAPIView, mixins.ListModelMixin):

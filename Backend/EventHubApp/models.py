@@ -62,3 +62,16 @@ class Tags(Enum):
     movie_review = 'movie review'
     book_review = 'book review'
     sport_event = 'sports events'
+
+
+class UserAchievement(Enum):
+    event_participation = 'Participated events$1, 3, 7, 15, 25, 60'
+    user_likes = 'Liked posts$3, 5, 10, 20, 30, 40, 60'
+    user_comments = 'Comments on posts$1, 3, 7, 15, 30, 50'
+
+
+class CafeAchievement(Enum):
+    make_event = 'Number of events$1, 5, 12, 25 '
+    having_participants = 'Participants in your events$5, 10, 20'
+    post_likes = 'Likes on posts$10, 20, 40, 100, 300, 500 '
+    followers = 'Number of followers$5, 10, 20, 40, 100'
