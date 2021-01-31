@@ -18,6 +18,27 @@ from .models import User, Event, Participation, CafeFollow, EventLike, EventComm
 from .permissions import IsOwner, IsPostRequest, IsPutRequest, IsDeleteRequest, IsGetRequest
 
 
+class GetAllAchievements(generics.GenericAPIView, mixins.ListModelMixin):
+
+    def get(self, request, **kwargs):
+        user_type = kwargs.get('user_type')
+
+        return_data = {}
+        if user_type == 'cafe':
+            for a in CafeAchievement:
+                return_data.update({
+                    str(a).split('.')[1]: a.value
+                })
+
+        else:
+            for a in UserAchievement:
+                return_data.update({
+                    str(a).split('.')[1]: a.value
+                })
+
+        return Response(return_data, status=status.HTTP_200_OK)
+
+
 class GetAchievements(generics.GenericAPIView, mixins.ListModelMixin):
     permission_classes = [IsPrivate, ]
     serializer_class = ParticipateSerializer2

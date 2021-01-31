@@ -35,4 +35,5 @@ urlpatterns = [
     path('event/tags', views.GetTags.as_view()),
     path('event/search', views.SearchEvent.as_view()),
     path('cafe/search', views.SearchCafe.as_view()),
+    path('achievements/<str:user_type>', views.GetAllAchievements.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
