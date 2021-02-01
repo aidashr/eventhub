@@ -89,3 +89,12 @@ class ChatMessage(models.Model):
     created_at = models.DateTimeField(auto_now=True, auto_now_add=False)
     sender = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='sender')
     reply_of = models.IntegerField(null=True)
+
+
+class GroupChatMessage(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, null=True)
+    message = models.CharField(null=True, max_length=1500)
+    is_read = models.BooleanField(null=True, default=False)
+    created_at = models.DateTimeField(auto_now=True, auto_now_add=False)
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='user')
+    reply_of = models.IntegerField(null=True)
