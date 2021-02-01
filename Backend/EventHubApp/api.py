@@ -6,14 +6,68 @@ from rest_framework.response import Response
 from knox.models import AuthToken
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .serializers import UserSerializer, UserRegisterSerializer, CafeRegisterSerializer, CafeSerializer, \
-    LoginSerializer, EventSerializer, UpdateEventSerializer, ChatMessagesSerializer, ChatSerializer
+    LoginSerializer, EventSerializer, UpdateEventSerializer, ChatMessagesSerializer, ChatSerializer, \
+    GroupChatMessagesSerializer
 
-from .models import Event, User, Tags, ChatMessage, ChatThread
+from .models import Event, User, Tags, ChatMessage, ChatThread, GroupChatMessage
 from .permissions import IsOwner, IsPostRequest, IsPutRequest, IsDeleteRequest, IsGetRequest, IsParticipant, IsChatOwner
 
 
 class CustomNumberPagination(PageNumberPagination):
     page_size = 50
+
+
+class EventGroupChatAPI(generics.GenericAPIView, mixins.ListModelMixin):
+    serializer_class = GroupChatMessagesSerializer
+    queryset = GroupChatMessage.objects.all()
+    pagination_class = CustomNumberPagination
+    permission_classes = [Or(And(IsGetRequest, IsChatOwner),
+                             And(IsDeleteRequest, IsChatOwner),
+                             And(IsPutRequest, IsChatOwner))]
+
+    def get_queryset(self):
+        data = GroupChatMessage.objects.filter(event_id=self.kwargs.get('event_id'))
+        return data
+
+    def get(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, *args, **kwargs):
+        event_id = request.data.get('event_id')
+        request.data.update({
+            "event": event_id,
+            "sender": request.user.id
+        })
+        serializer = GroupChatMessagesSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
+        try:
+            GroupChatMessage.objects.get(id=kwargs.get('message_id')).delete()
+            return Response(status=status.HTTP_200_OK)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def put(self, request, *args, **kwargs):
+        request.data.update({
+            'id': kwargs.get('message_id')
+        })
+        ser = GroupChatMessagesSerializer(data=request.data)
+        ser.is_valid(raise_exception=True)
+        ser.update(instance=GroupChatMessage.objects.get(id=kwargs.get('message_id')), validated_data=request.data)
+        return Response({
+            "message": ser.data
+        })
 
 
 class UserChatsAPI(generics.GenericAPIView):

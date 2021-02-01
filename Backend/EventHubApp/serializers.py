@@ -221,3 +221,9 @@ class ChatMessagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChatMessage
         fields = '__all__'
+
+
+class GroupChatMessagesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChatMessage
+        fields = '__all__'
