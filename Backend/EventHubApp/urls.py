@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .api import RegisterAPI, LoginAPI, EventAPI, PostEventAPI,EventRateAPI
+from .api import RegisterAPI, LoginAPI, EventAPI, PostEventAPI, EventRateAPI, ChatAPI, PostChatAPI
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
@@ -9,6 +9,7 @@ urlpatterns = [
     path('users/sign-up', RegisterAPI.as_view()),
     path('users/login', LoginAPI.as_view()),
     path('users/<int:id>', views.UserProfile.as_view()),
+    path('users/<int:id>/chats', UserChatsAPI.as_view()),
     path('users/<int:id>/events', views.CafeEventsAPI.as_view()),
     path('users/<int:id>/achievements', views.GetAchievements.as_view()),
     path('users/<int:id>/participated-events', views.GetParticipatedEventsAPI.as_view()),
@@ -36,4 +37,8 @@ urlpatterns = [
     path('event/search', views.SearchEvent.as_view()),
     path('cafe/search', views.SearchCafe.as_view()),
     path('achievements/<str:user_type>', views.GetAllAchievements.as_view()),
+    path('chat', PostChatAPI.as_view()),
+    path('chat/<int:thread_id>', ChatAPI.as_view()),
+    path('message', ChatAPI.as_view()),
+    path('message/<int:message_id>', ChatAPI.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

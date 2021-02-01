@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import User, Event, Participation, CafeFollow, EventLike, EventComment, CommentLike
+from .models import User, Event, Participation, CafeFollow, EventLike, EventComment, CommentLike, ChatThread, \
+    ChatMessage
 from django.contrib.auth import authenticate
 
 
@@ -207,4 +208,16 @@ class CommentLikeSerializer(serializers.ModelSerializer):
 class PostCommentLikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommentLike
+        fields = '__all__'
+
+
+class ChatSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChatThread
+        fields = '__all__'
+
+
+class ChatMessagesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChatMessage
         fields = '__all__'
