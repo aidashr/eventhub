@@ -11,6 +11,8 @@ class User(AbstractUser):
     profile_image = models.ImageField(blank=True, null=True)
     cafe_address = models.CharField(null=True, max_length=1000)
     is_private = models.BooleanField(default=False)
+    lang = models.FloatField(null=True, default=0)
+    lat = models.FloatField(null=True, default=0)
 
 
 class Event(models.Model):
