@@ -15,7 +15,7 @@ class CafeSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'cafe_name',
-                  'phone_number', 'is_regular', 'profile_image', 'cafe_address', 'lang', 'lat')
+                  'phone_number', 'is_regular', 'profile_image', 'cafe_address', 'lng', 'lat')
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -35,7 +35,7 @@ class CafeRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'password', 'cafe_name', 'phone_number',
-                  'cafe_address', 'is_regular', 'lang', 'lat')
+                  'cafe_address', 'is_regular', 'lng', 'lat')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
