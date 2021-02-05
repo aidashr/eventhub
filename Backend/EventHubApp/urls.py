@@ -1,6 +1,6 @@
 from django.urls import path, include
 from .api import RegisterAPI, LoginAPI, EventAPI, PostEventAPI, EventRateAPI, ChatAPI, PostChatAPI, UserChatsAPI, \
-    EventGroupChatAPI
+    EventGroupChatAPI, MessageAPI
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
@@ -42,6 +42,6 @@ urlpatterns = [
     path('chat', PostChatAPI.as_view()),
     path('chat/<int:thread_id>', ChatAPI.as_view()),
     path('message', ChatAPI.as_view()),
-    path('message/<int:message_id>', ChatAPI.as_view()),
+    path('message/<int:message_id>', MessageAPI.as_view()),
     path('group-message/<int:message_id>', EventGroupChatAPI.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
