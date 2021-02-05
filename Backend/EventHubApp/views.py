@@ -505,22 +505,14 @@ class UserProfile(generics.GenericAPIView):
 
         follower_count = len(CafeFollow.objects.filter(followed=user.id))
         following_count = len(CafeFollow.objects.filter(follower=user.id))
-        new_data = {}
 
         if user.is_regular:
             ser = UserSerializer(user)
-            new_data = ser.data
 
         else:
             ser = CafeSerializer(user)
-            new_data = ser.data
-            new_data.update({
-                'location': {
-                    'lang': user.lang,
-                    'lat': user.lat
-                }
-            })
 
+        new_data = ser.data
         new_data.update({'follower_count': follower_count, 'following_count': following_count})
 
         return Response(new_data, status=status.HTTP_200_OK)
