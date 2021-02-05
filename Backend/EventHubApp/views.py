@@ -516,7 +516,7 @@ class UserProfile(generics.GenericAPIView):
             new_data = ser.data
             new_data.update({
                 'location': {
-                    'lang': user.lang,
+                    'lng': user.lng,
                     'lat': user.lat
                 }
             })

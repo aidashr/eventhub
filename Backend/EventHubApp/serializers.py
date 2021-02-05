@@ -72,7 +72,7 @@ class UpdateCafeSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'cafe_name',
-                  'phone_number', 'is_regular', 'profile_image', 'cafe_address')
+                  'phone_number', 'is_regular', 'profile_image', 'cafe_address', 'lng', 'lat')
 
     def update(self, instance, validated_data):
         obj = super().update(instance, validated_data)
