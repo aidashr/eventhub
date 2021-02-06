@@ -126,7 +126,7 @@ class ParticipateSerializer2(serializers.ModelSerializer):
 
     class Meta:
         model = Participation
-        fields = 'all'
+        fields = '__all__'
 
 
 class PostParticipateSerializer(serializers.ModelSerializer):
