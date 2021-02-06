@@ -46,6 +46,7 @@ class EventLike(models.Model):
 
 
 class EventComment(models.Model):
+    content = models.CharField(null=True, max_length=4000)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     event = models.ForeignKey(Event, on_delete=models.CASCADE, null=True)
     is_participant = models.BooleanField(null=True, default=False)
