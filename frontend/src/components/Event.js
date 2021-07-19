@@ -3,6 +3,7 @@ import PorpsType from "prop-types";
 
 export class Event extends Component {
   render() {
+    
     return (
       <div style={{ borderRadius: "8px", border: "1px solid gray" }}>
         <div className='row no-gutters bg-light p-2 align-items-center'>
